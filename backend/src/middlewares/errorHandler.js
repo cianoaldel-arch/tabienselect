@@ -1,0 +1,11 @@
+module.exports = function errorHandler(err, _req, res, _next) {
+  const status = err.status || 500;
+  const body = {
+    error: {
+      message: err.message || 'Internal Server Error',
+    },
+  };
+  if (err.details) body.error.details = err.details;
+  if (status >= 500) console.error(err);
+  res.status(status).json(body);
+};

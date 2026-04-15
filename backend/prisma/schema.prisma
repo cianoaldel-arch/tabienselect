@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Plate {
+  id             String   @id @default(cuid())
+  prefix         String
+  number         String
+  full_plate     String   @unique
+  category       String
+  plate_type     String
+  numerology_sum Int
+  line_qr_url    String
+  contact_text   String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  @@index([category])
+  @@index([plate_type])
+}
+
+model AdminUser {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+}
