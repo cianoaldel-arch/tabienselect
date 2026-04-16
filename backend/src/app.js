@@ -20,6 +20,7 @@ function createApp() {
   app.use((_req, res) =>
     res.status(404).json({ error: { message: 'Not Found' } })
   );
+  
 
   app.use(errorHandler);
 
