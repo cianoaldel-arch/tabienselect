@@ -45,6 +45,8 @@ tabienselect/
 
 Create a database, e.g. `tabienselect`.
 
+docker exec -it tabienselect-postgres-1 psql -U postgres -d tabienselect
+
 ### 2. Backend
 
 ```bash
