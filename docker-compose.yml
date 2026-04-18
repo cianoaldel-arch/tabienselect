@@ -1,24 +1,6 @@
 name: tabienselect
 
 services:
-  postgres:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    networks:
-      - tabien-net
 
   backend:
     build:
@@ -28,15 +10,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
+      # Overrides for container runtime (host `postgres` is reachable only inside the compose network).
       NODE_ENV: production
       PORT: 4000
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      CORS_ORIGIN: ${CORS_ORIGIN}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     # Apply migrations on startup, then launch the API
     command: sh -c "npx prisma migrate deploy && node src/server.js"
     ports:
@@ -55,11 +35,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
+        # NEXT_PUBLIC_* must be baked in at build time for the browser bundle.
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     restart: unless-stopped
     depends_on:
       backend:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -74,10 +57,6 @@ services:
       start_period: 30s
     networks:
       - tabien-net
-
-volumes:
-  postgres_data:
-    driver: local
 
 networks:
   tabien-net:

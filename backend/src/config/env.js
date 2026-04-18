@@ -1,5 +1,8 @@
-require('dotenv').config();
+const path = require('path');
 
+// Load root .env (single source of truth). In docker, vars are injected via env_file
+// and this call is a harmless no-op because the file is not present.
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 const required = ['DATABASE_URL', 'JWT_SECRET'];
 
