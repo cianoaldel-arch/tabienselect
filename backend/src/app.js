@@ -9,6 +9,7 @@ const errorHandler = require('./middlewares/errorHandler');
 
 function createApp() {
   const app = express();
+  app.use(cors());
 
   app.use(helmet());
   app.use(cors({ origin: env.corsOrigin.split(',').map((s) => s.trim()) }));
@@ -20,7 +21,7 @@ function createApp() {
   app.use((_req, res) =>
     res.status(404).json({ error: { message: 'Not Found' } })
   );
-  
+
 
   app.use(errorHandler);
 
