@@ -3,38 +3,55 @@ import type { Plate } from '@/lib/types';
 
 export default function PlateCard({ plate }: { plate: Plate }) {
   return (
-    <Link
-      href={`/plates/${plate.id}`}
-      className="group relative block overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-1 hover:border-brand-accent hover:shadow-glow"
-    >
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold-300 via-brand-accent to-gold-300 opacity-0 transition group-hover:opacity-100" />
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="text-xs uppercase tracking-widest text-slate-400">
-            Plate
-          </div>
-          <div className="mt-1 font-display text-3xl font-bold tracking-wider text-brand">
-            {plate.full_plate}
+    <div className="overflow-hidden rounded-2xl bg-ink-900 text-white shadow-card">
+      <div className="p-5">
+        <div className="mb-3 flex items-start justify-between">
+          <span className="text-[11px] font-semibold tracking-[0.2em] text-white/60">
+            PLATE
+          </span>
+          <div className="flex flex-col items-end gap-1.5">
+            <span className="rounded-full bg-white px-3 py-0.5 text-[11px] font-medium text-ink-900">
+              ผลรวม {plate.numerology_sum}
+            </span>
+            <span className="rounded-full bg-cyan-400 px-3 py-0.5 text-[11px] font-medium text-ink-900">
+              หมวดหมู่
+            </span>
           </div>
         </div>
-        <span className="rounded-full bg-gold-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gold-700">
-          {plate.category}
-        </span>
+
+        <div className="plate-box mx-auto w-full">
+          <svg
+            aria-hidden
+            className="absolute inset-x-3 top-1/2 -translate-y-1/2 opacity-50"
+            height="10"
+            viewBox="0 0 200 10"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0 5 Q25 0 50 5 T100 5 T150 5 T200 5"
+              stroke="#0a1628"
+              strokeWidth="1"
+              fill="none"
+            />
+          </svg>
+          <div className="relative text-center font-display text-3xl font-bold tracking-wider">
+            {plate.full_plate}
+          </div>
+          <div className="relative text-center text-[11px] font-medium">
+            กรุงเทพมหานคร
+          </div>
+        </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <span className="chip">{plate.plate_type}</span>
-        <span className="chip bg-amber-50 text-amber-800">
-          ผลรวม {plate.numerology_sum}
-        </span>
+      <div className="flex items-center justify-between border-t border-white/10 px-5 py-3">
+        <span className="font-display text-lg font-semibold">฿ 60,000.-</span>
+        <Link
+          href={`/plates/${plate.id}`}
+          className="text-sm text-cyan-400 hover:text-cyan-300"
+        >
+          ดูรายละเอียด
+        </Link>
       </div>
-
-      <div className="mt-5 flex items-center justify-between border-t border-dashed border-slate-100 pt-3 text-sm">
-        <span className="text-slate-400">เลขมงคล</span>
-        <span className="font-semibold text-brand-accent transition group-hover:translate-x-1">
-          ดูรายละเอียด →
-        </span>
-      </div>
-    </Link>
+    </div>
   );
 }

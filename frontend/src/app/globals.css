@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,68 +6,80 @@
 
 :root {
   color-scheme: light;
+  --color-primary: #172c5c;
+  --color-accent: #d4af37;
+  --color-background: #f4f6fa;
+  --color-foreground: #0a1628;
+  --color-muted: #64748b;
 }
 
 html,
 body {
-  @apply text-brand antialiased;
-}
-
-body {
-  background-color: #f7f8fc;
-  background-image:
-    radial-gradient(circle at 15% -10%, rgba(245, 158, 11, 0.10), transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(59, 130, 246, 0.08), transparent 45%);
-  background-attachment: fixed;
+  @apply antialiased;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
 @layer components {
   .container-page {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
-  }
-
-  .glass {
-    @apply border border-white/60 bg-white/70 backdrop-blur-md;
+    @apply mx-auto w-full max-w-[1200px] px-5;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium transition;
   }
-  .btn-primary {
-    @apply btn bg-brand text-white shadow-soft hover:bg-brand-800;
+  .btn-cyan {
+    @apply btn bg-cyan-400 text-ink-900 hover:bg-cyan-300;
   }
+  .btn-outline-dark {
+    @apply btn border border-ink-900 text-ink-900 hover:bg-ink-900 hover:text-white;
+  }
+  .btn-outline-light {
+    @apply btn border border-white/80 text-white hover:bg-white hover:text-ink-900;
+  }
+
+  .plate-box {
+    @apply relative rounded-[14px] border-2 border-ink-900 bg-white px-4 py-3 text-ink-900;
+  }
+
   .btn-accent {
-    @apply btn bg-gold-500 text-brand shadow-glow hover:bg-gold-400;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-brand shadow-sm transition hover:bg-gold-300 active:bg-gold-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/40;
   }
+
   .btn-ghost {
-    @apply btn border border-slate-200 bg-white text-brand hover:border-brand-accent hover:text-brand-accent;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-brand-accent/40 hover:bg-gold-50 hover:text-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/30 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider;
   }
 
   .section-eyebrow {
-    @apply inline-block rounded-full border border-brand-accent/30 bg-gold-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-accent;
+    @apply inline-block rounded-full bg-gold-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-accent;
   }
 
-  .heading-display {
-    @apply font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl;
+  .admin-shell {
+    @apply mx-auto w-full max-w-[1200px] px-5 py-8;
+  }
+
+  .admin-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
   }
 }
 
 @layer utilities {
-  .text-gradient-gold {
-    background: linear-gradient(90deg, #fbbf24, #f59e0b 50%, #fbbf24);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .bg-grid {
+  .hero-waves {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-    background-size: 36px 36px;
+      radial-gradient(1200px 600px at 70% 30%, rgba(74, 200, 220, 0.18), transparent 60%),
+      radial-gradient(900px 500px at 20% 70%, rgba(23, 44, 92, 0.6), transparent 70%);
+  }
+  .wave-lines {
+    background-image: repeating-linear-gradient(
+      100deg,
+      transparent 0,
+      transparent 40px,
+      rgba(255, 255, 255, 0.04) 40px,
+      rgba(255, 255, 255, 0.04) 41px
+    );
   }
 }

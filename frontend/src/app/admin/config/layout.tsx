@@ -1,7 +1,7 @@
 import { AdminSidebar } from '@/components/AdminSidebar';
 import { AdminGuard } from '@/components/AdminGuard';
 
-export default function AdminPlatesLayout({
+export default function AdminConfigLayout({
   children,
 }: {
   children: React.ReactNode;

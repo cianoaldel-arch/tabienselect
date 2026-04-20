@@ -1,414 +1,252 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { api } from '@/lib/api';
-import PlateCard from '@/components/PlateCard';
-import type { Plate } from '@/lib/types';
 
-const FEATURED_LIMIT = 8;
-
-export default async function LandingPage() {
-  let featured: Plate[] = [];
-  let total = 0;
-  try {
-    const data = await api.listPlates({ page: 1, limit: FEATURED_LIMIT });
-    featured = data.items;
-    total = data.total;
-  } catch {
-    featured = [];
-  }
-
+export default function LandingPage() {
   return (
-    <div className="space-y-24">
+    <div className="container-page py-8">
       <Hero />
-      <Stats total={total} />
-      <Featured plates={featured} />
-      <HowItWorks />
-      <WhyChooseUs />
-      <Testimonials />
-      <Contact />
+      <Tagline />
+      <FeatureBar />
     </div>
   );
 }
 
 function Hero() {
   return (
-    <section className="relative -mt-10 overflow-hidden rounded-3xl border border-white/10 bg-brand text-white shadow-soft">
-      <div className="absolute inset-0 bg-grid opacity-30" />
-      <div className="absolute -top-32 -right-24 h-96 w-96 animate-float rounded-full bg-brand-accent/30 blur-3xl" />
-      <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-blue-400/20 blur-3xl" />
+    <section className="relative overflow-hidden rounded-[28px] bg-ink-900 text-white">
+      <div className="absolute inset-0 hero-waves" />
+      <div className="absolute inset-0 wave-lines opacity-60" />
+      {/* decorative wavy stripe */}
+      <svg
+        aria-hidden
+        className="absolute bottom-10 left-0 w-[120%] opacity-30"
+        viewBox="0 0 1200 160"
+        fill="none"
+      >
+        <path
+          d="M0 80 Q150 20 300 80 T600 80 T900 80 T1200 80"
+          stroke="#4ac8dc"
+          strokeWidth="2"
+          fill="none"
+        />
+        <path
+          d="M0 110 Q150 60 300 110 T600 110 T900 110 T1200 110"
+          stroke="#ffffff"
+          strokeOpacity="0.15"
+          strokeWidth="2"
+          fill="none"
+        />
+      </svg>
 
-      <div className="relative grid gap-12 px-6 py-20 sm:px-12 lg:grid-cols-[1.2fr_1fr] lg:py-24">
-        <div className="animate-fade-up">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold tracking-widest text-gold-200">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold-300" />
-            TABIEN SELECT · 2026
-          </span>
-          <h1 className="heading-display mt-6">
-            ทะเบียนสวย <span className="text-gradient-gold">เลขมงคล</span>
+      <div className="relative grid items-center gap-10 px-10 py-16 lg:grid-cols-[1.1fr_1fr] lg:px-16 lg:py-20">
+        <div>
+          <h1 className="font-display text-5xl font-bold leading-[1.1] sm:text-6xl">
+            รับจอง<span className="text-cyan-400">ทะเบียน</span>
             <br />
-            คัดพิเศษเพื่อคุณ
+            <span className="text-white/95">รถยนต์หมวดใหม่</span>
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            เลือกทะเบียนที่ใช่ เสริมดวง เสริมความมั่นใจ
-            ทุกหมายเลขผ่านการตรวจสอบตามหลักเลขศาสตร์ พร้อมเอกสารครบ
-            โอนปลอดภัย
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/plates" className="btn-accent">
-              ดูทะเบียนทั้งหมด →
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-lg text-cyan-400">
+            <span>เลขมงคล</span>
+            <span className="text-white/40">|</span>
+            <span>เลขศาสตร์</span>
+            <span className="text-white/40">|</span>
+            <span>เลขวันเกิด</span>
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link
+              href="/plates"
+              className="rounded-full bg-cyan-400 px-8 py-3 text-[15px] font-medium text-ink-900 hover:bg-cyan-300"
+            >
+              ดูทะเบียน
             </Link>
-            <a href="#contact" className="btn border border-white/30 text-white hover:bg-white/10">
-              ปรึกษาฟรี
+            <a
+              href="#contact"
+              className="rounded-full border border-white/90 px-8 py-3 text-[15px] font-medium text-white hover:bg-white hover:text-ink-900"
+            >
+              ติดต่อเรา
             </a>
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center gap-6 text-xs text-slate-400">
-            <Trust label="โอนลอยปลอดภัย" />
-            <Trust label="เอกสารครบถ้วน" />
-            <Trust label="ดูแลหลังการขาย" />
+          <div className="mt-12 flex flex-wrap items-center gap-6 text-[15px]">
+            <span className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24 11.72 11.72 0 003.66.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.66 1 1 0 01-.24 1.05z" />
+                </svg>
+              </span>
+              082-416-6551 คุณน็อต
+            </span>
+            <span className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#06c755] text-white">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596a.615.615 0 01-.199.031c-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595a.603.603 0 01.194-.033c.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
+                </svg>
+              </span>
+              @tabienselect
+            </span>
           </div>
         </div>
 
-        <div className="relative hidden lg:block">
-          <FloatingPlate
-            text="9กก 9999"
-            className="absolute right-0 top-4 rotate-3"
-            tag="Premium"
-          />
-          <FloatingPlate
-            text="ฮง 888"
-            className="absolute right-24 top-44 -rotate-6 animate-float"
-            tag="Lucky"
-          />
-          <FloatingPlate
-            text="ษฎ 5"
-            className="absolute right-4 top-72 rotate-2"
-            tag="Rare"
-          />
+        <div className="relative flex items-center justify-center">
+          <PlateShowcase />
+          <CarIllustration />
         </div>
       </div>
     </section>
   );
 }
 
-function Trust({ label }: { label: string }) {
+function PlateShowcase() {
   return (
-    <span className="flex items-center gap-2">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-gold-300">
-        <path
-          d="M20 6L9 17l-5-5"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      {label}
-    </span>
-  );
-}
-
-function FloatingPlate({
-  text,
-  tag,
-  className = '',
-}: {
-  text: string;
-  tag: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`w-64 rounded-2xl border border-white/20 bg-white/95 p-5 text-brand shadow-2xl ${className}`}
-    >
-      <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-        <span>Thailand</span>
-        <span className="rounded-full bg-gold-100 px-2 py-0.5 text-gold-700">
-          {tag}
-        </span>
-      </div>
-      <div className="mt-2 text-center font-display text-4xl font-bold tracking-widest">
-        {text}
-      </div>
-      <div className="mt-2 text-center text-[10px] text-slate-400">
-        TABIEN · SELECT
+    <div className="absolute right-4 top-0 z-10 rounded-2xl bg-white px-6 py-3 shadow-2xl ring-2 ring-ink-900 sm:right-16">
+      <div className="relative">
+        <svg
+          aria-hidden
+          className="absolute inset-x-2 top-1/2 -translate-y-1/2 opacity-60"
+          width="95%"
+          height="16"
+          viewBox="0 0 200 16"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0 8 Q25 0 50 8 T100 8 T150 8 T200 8"
+            stroke="#0a1628"
+            strokeWidth="1.2"
+            fill="none"
+          />
+        </svg>
+        <div className="relative font-display text-5xl font-bold tracking-wider text-ink-900 sm:text-6xl">
+          7บข <span className="ml-2">28</span>
+        </div>
+        <div className="relative mt-1 text-center text-sm font-medium text-ink-900">
+          กรุงเทพมหานคร
+        </div>
       </div>
     </div>
   );
 }
 
-function Stats({ total }: { total: number }) {
+function CarIllustration() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 420 240"
+      className="relative mt-32 w-full max-w-[460px] drop-shadow-[0_30px_30px_rgba(0,0,0,0.45)]"
+    >
+      <defs>
+        <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f6f8fc" />
+          <stop offset="60%" stopColor="#d3dae4" />
+          <stop offset="100%" stopColor="#8b95a6" />
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1b2d4a" />
+          <stop offset="100%" stopColor="#0a1628" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="210" cy="210" rx="190" ry="12" fill="#000" opacity="0.35" />
+      <path
+        d="M30 170 Q50 120 120 100 Q180 70 250 80 Q320 85 360 120 Q395 140 400 170 L400 190 Q400 200 390 200 L40 200 Q30 200 30 190 Z"
+        fill="url(#body)"
+      />
+      <path
+        d="M120 100 Q180 70 250 80 Q320 85 355 115 L350 145 L130 145 Z"
+        fill="url(#glass)"
+        opacity="0.85"
+      />
+      <path
+        d="M120 100 Q180 70 250 80 L250 78 Q180 68 120 100 Z"
+        fill="#ffffff"
+        opacity="0.6"
+      />
+      <rect x="205" y="150" width="55" height="22" rx="3" fill="#ffffff" stroke="#0a1628" strokeWidth="1.5" />
+      <text x="232" y="166" textAnchor="middle" fontSize="9" fontWeight="700" fill="#0a1628" fontFamily="sans-serif">TABIEN SELECT</text>
+      <circle cx="110" cy="200" r="26" fill="#0a1628" />
+      <circle cx="110" cy="200" r="16" fill="#3a4556" />
+      <circle cx="110" cy="200" r="7" fill="#7a8597" />
+      <circle cx="320" cy="200" r="26" fill="#0a1628" />
+      <circle cx="320" cy="200" r="16" fill="#3a4556" />
+      <circle cx="320" cy="200" r="7" fill="#7a8597" />
+      <path d="M60 180 L90 180" stroke="#5fd0e3" strokeWidth="2" opacity="0.9" />
+    </svg>
+  );
+}
+
+function Tagline() {
+  return (
+    <div className="py-10 text-center">
+      <p className="font-display text-2xl font-semibold text-ink-900 sm:text-3xl">
+        จองง่าย| เลือกได้ | ได้จริง
+      </p>
+    </div>
+  );
+}
+
+function FeatureBar() {
   const items = [
-    { label: 'ทะเบียนพร้อมขาย', value: total > 0 ? `${total}+` : '500+' },
-    { label: 'ลูกค้าที่ไว้วางใจ', value: '1,200+' },
-    { label: 'รีวิว 5 ดาว', value: '98%' },
-    { label: 'ปีที่ให้บริการ', value: '8+' },
-  ];
-  return (
-    <section className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft sm:grid-cols-4 sm:p-8">
-      {items.map((s) => (
-        <div key={s.label} className="text-center">
-          <div className="font-display text-3xl font-bold text-brand sm:text-4xl">
-            {s.value}
-          </div>
-          <div className="mt-1 text-xs text-slate-500 sm:text-sm">{s.label}</div>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-function Featured({ plates }: { plates: Plate[] }) {
-  return (
-    <section>
-      <div className="mb-10 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <span className="section-eyebrow">Featured</span>
-          <h2 className="heading-display mt-3">ทะเบียนแนะนำ</h2>
-          <p className="mt-2 max-w-xl text-slate-600">
-            คัดเลขเด่นที่ลูกค้าให้ความสนใจมากที่สุดในเดือนนี้
-          </p>
-        </div>
-        <Link href="/plates" className="btn-ghost">
-          ดูทั้งหมด →
-        </Link>
-      </div>
-
-      {plates.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">
-          ยังไม่มีทะเบียนพร้อมแสดง
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {plates.map((plate) => (
-            <PlateCard key={plate.id} plate={plate} />
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function HowItWorks() {
-  const steps = [
     {
-      n: '01',
-      title: 'เลือกทะเบียน',
-      desc: 'เลือกหมายเลขที่ถูกใจจากคลังที่คัดมาแล้ว',
+      top: '10,000+',
+      bottom: 'ทะเบียนพร้อมจอง',
+      isStat: true,
     },
     {
-      n: '02',
-      title: 'ปรึกษาทีมงาน',
-      desc: 'แชทผ่าน Line ตรวจสอบรายละเอียด ราคา และความพร้อม',
+      icon: (
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"
+            stroke="#ffffff"
+            strokeWidth="1.6"
+          />
+          <path d="M8.5 12l2.5 2.5 4.5-5" stroke="#5fd0e3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ),
+      bottom: 'เลขแท้ ถูกต้องตามกฎหมาย',
     },
     {
-      n: '03',
-      title: 'รับทะเบียน',
-      desc: 'ดำเนินการเอกสารครบถ้วน ส่งมอบถึงมือคุณอย่างปลอดภัย',
+      icon: (
+        <svg width="40" height="34" viewBox="0 0 28 22" fill="none">
+          <path
+            d="M8 2c-3 0-5 2.2-5 5 0 4.5 5 7 8 10 3-3 8-5.5 8-10 0-2.8-2-5-5-5-1.8 0-3 1-3 2.5C11 3 9.8 2 8 2z"
+            fill="#ffffff"
+            opacity="0.95"
+          />
+          <path
+            d="M17 8c-2.2 0-3.8 1.6-3.8 3.7 0 3.4 3.8 5.2 6 7.5 2.3-2.3 6.1-4.1 6.1-7.5C25.3 9.6 23.7 8 21.5 8c-1.3 0-2.2.7-2.3 1.9C19.1 8.7 18.2 8 17 8z"
+            fill="#5fd0e3"
+            transform="translate(-2 0)"
+          />
+        </svg>
+      ),
+      bottom: 'ดำเนินการครบทุกขั้นตอน',
+    },
+    {
+      top: '90%',
+      bottom: 'โอกาสได้สูงสุด',
+      isStat: true,
     },
   ];
+
   return (
-    <section>
-      <div className="mb-10 text-center">
-        <span className="section-eyebrow">Process</span>
-        <h2 className="heading-display mt-3">3 ขั้นตอนง่ายๆ</h2>
-      </div>
-      <div className="grid gap-6 md:grid-cols-3">
-        {steps.map((s, i) => (
+    <section className="rounded-2xl bg-ink-900 px-6 py-7 text-white shadow-card sm:px-10">
+      <div className="grid grid-cols-2 items-center gap-6 lg:grid-cols-4 lg:divide-x lg:divide-white/15">
+        {items.map((it, i) => (
           <div
-            key={s.n}
-            className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
+            key={i}
+            className={`flex items-center justify-center gap-4 ${i > 0 ? 'lg:pl-6' : ''}`}
           >
-            <div className="font-display text-5xl font-bold text-gold-200">
-              {s.n}
-            </div>
-            <h3 className="mt-3 text-lg font-semibold text-brand">{s.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
-              {s.desc}
-            </p>
-            {i < steps.length - 1 && (
-              <div className="absolute -right-3 top-1/2 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-accent md:flex">
-                →
+            {it.isStat ? (
+              <div className="text-center">
+                <div className="font-display text-3xl font-bold sm:text-4xl">{it.top}</div>
+                <div className="mt-1 text-xs text-cyan-400 sm:text-sm">{it.bottom}</div>
               </div>
+            ) : (
+              <>
+                <div className="shrink-0">{it.icon}</div>
+                <div className="text-xs text-cyan-400 sm:text-sm">{it.bottom}</div>
+              </>
             )}
           </div>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function WhyChooseUs() {
-  const items = [
-    {
-      icon: '✦',
-      title: 'คัดสรรพิเศษ',
-      desc: 'ตรวจสอบเลขมงคลและความสวยตามหลักเลขศาสตร์ทุกหมายเลข',
-    },
-    {
-      icon: '✓',
-      title: 'ของแท้ ถูกต้อง',
-      desc: 'เอกสารครบถ้วน โอนลอยปลอดภัย ตรวจสอบได้ทุกขั้นตอน',
-    },
-    {
-      icon: '◈',
-      title: 'ตัวเลือกหลากหลาย',
-      desc: 'ทั้งรถเก๋ง กระบะ และมอเตอร์ไซค์ ตอบโจทย์ทุกไลฟ์สไตล์',
-    },
-    {
-      icon: '♥',
-      title: 'ดูแลหลังการขาย',
-      desc: 'ทีมงานพร้อมให้คำปรึกษาตลอดกระบวนการ ตั้งแต่เลือกจนถึงโอน',
-    },
-  ];
-
-  return (
-    <section id="why">
-      <div className="mb-10 text-center">
-        <span className="section-eyebrow">Why us</span>
-        <h2 className="heading-display mt-3">ทำไมต้องเลือกเรา</h2>
-        <p className="mx-auto mt-2 max-w-xl text-slate-600">
-          มาตรฐานบริการที่ลูกค้ากว่า 1,200 คนวางใจ
-        </p>
-      </div>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item) => (
-          <div
-            key={item.title}
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-accent hover:shadow-glow"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-gold-100 to-gold-200 text-xl font-bold text-brand-accent transition group-hover:scale-110">
-              {item.icon}
-            </div>
-            <h3 className="mt-4 text-base font-semibold text-brand">
-              {item.title}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
-              {item.desc}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  const reviews = [
-    {
-      quote:
-        'ได้ทะเบียนถูกใจในราคาที่คุยได้ เอกสารครบ โอนเร็วมาก ประทับใจครับ',
-      name: 'คุณภาคิน',
-      role: 'เจ้าของรถ SUV',
-    },
-    {
-      quote:
-        'ทีมงานให้คำปรึกษาดี อธิบายเรื่องเลขมงคลละเอียด ตัดสินใจง่ายขึ้น',
-      name: 'คุณนภัสสร',
-      role: 'นักธุรกิจ',
-    },
-    {
-      quote: 'ราคาโปร่งใส ไม่มีบวกเพิ่มทีหลัง บริการหลังการขายดีจริง',
-      name: 'คุณวรพล',
-      role: 'ลูกค้าประจำ',
-    },
-  ];
-  return (
-    <section>
-      <div className="mb-10 text-center">
-        <span className="section-eyebrow">Reviews</span>
-        <h2 className="heading-display mt-3">เสียงจากลูกค้า</h2>
-      </div>
-      <div className="grid gap-5 md:grid-cols-3">
-        {reviews.map((r) => (
-          <figure
-            key={r.name}
-            className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-soft"
-          >
-            <div className="absolute -top-4 left-6 flex h-8 w-8 items-center justify-center rounded-full bg-brand-accent font-display text-lg font-bold text-white">
-              "
-            </div>
-            <div className="mt-2 flex gap-0.5 text-gold-500">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i}>★</span>
-              ))}
-            </div>
-            <blockquote className="mt-3 text-sm leading-relaxed text-slate-700">
-              {r.quote}
-            </blockquote>
-            <figcaption className="mt-4 border-t border-slate-100 pt-3 text-xs">
-              <div className="font-semibold text-brand">{r.name}</div>
-              <div className="text-slate-500">{r.role}</div>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Contact() {
-  const lineUrl = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://line.me/';
-  const lineQr =
-    process.env.NEXT_PUBLIC_LINE_QR_URL ??
-    'https://placehold.co/280x280/png?text=LINE+QR';
-
-  return (
-    <section
-      id="contact"
-      className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-brand via-brand-800 to-brand-700 p-8 text-white shadow-soft sm:p-12"
-    >
-      <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-brand-accent/20 blur-3xl" />
-      <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl" />
-
-      <div className="relative grid items-center gap-10 md:grid-cols-2">
-        <div>
-          <span className="section-eyebrow">Contact</span>
-          <h2 className="heading-display mt-3">พร้อมให้บริการ 24 ชม.</h2>
-          <p className="mt-3 max-w-md text-slate-300">
-            สแกน QR หรือกดปุ่มด้านล่างเพื่อแชทกับทีมงานผ่าน Line
-            สอบถามข้อมูลเพิ่มเติมหรือจองทะเบียนที่คุณสนใจได้ทันที
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href={lineUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="btn bg-green-500 text-white shadow-soft hover:bg-green-600"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
-              </svg>
-              ติดต่อผ่าน Line
-            </a>
-            <a
-              href="tel:+66"
-              className="btn border border-white/30 text-white hover:bg-white/10"
-            >
-              โทรสอบถาม
-            </a>
-          </div>
-        </div>
-
-        <div className="flex justify-center">
-          <div className="relative">
-            <div className="absolute inset-0 -m-2 rounded-3xl bg-gradient-to-br from-gold-300 to-brand-accent opacity-50 blur-xl" />
-            <div className="relative rounded-2xl border border-white/20 bg-white p-5 text-center shadow-2xl">
-              <Image
-                src={lineQr}
-                alt="Line QR code"
-                width={240}
-                height={240}
-                className="mx-auto h-auto w-[220px] rounded-lg"
-                unoptimized
-              />
-              <div className="mt-3 text-xs font-semibold text-slate-700">
-                สแกนเพื่อเพิ่มเพื่อน
-              </div>
-              <div className="text-[10px] text-slate-500">@tabienselect</div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

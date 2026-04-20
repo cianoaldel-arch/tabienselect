@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:root@localhost:5432/tabienselect?schema=public"
 }
 
 model Plate {
@@ -29,4 +29,24 @@ model AdminUser {
   email         String   @unique
   password_hash String
   created_at    DateTime @default(now())
+}
+
+model Theme {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  primary    String
+  accent     String
+  background String
+  foreground String
+  muted      String
+  is_active  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Config {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  value      String
+  updated_at DateTime @updatedAt
 }

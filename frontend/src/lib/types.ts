@@ -18,3 +18,20 @@ export type PlateListResponse = {
   page: number;
   limit: number;
 };
+
+export type Theme = {
+  id: string;
+  name: string;
+  primary: string;
+  accent: string;
+  background: string;
+  foreground: string;
+  muted: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ThemeInput = Omit<Theme, 'id' | 'created_at' | 'updated_at'>;
+
+export type ConfigMap = Record<string, string>;

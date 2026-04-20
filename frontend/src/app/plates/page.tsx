@@ -6,6 +6,7 @@ import PlateCard from '@/components/PlateCard';
 type SearchParams = {
   category?: string;
   plate_type?: string;
+  q?: string;
   page?: string;
 };
 
@@ -27,36 +28,31 @@ export default async function PlatesPage({
   const totalPages = Math.max(1, Math.ceil(data.total / LIMIT));
 
   return (
-    <>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Premium license plates</h1>
-        <p className="mt-1 text-slate-600">
-          {data.total} plate{data.total === 1 ? '' : 's'} available
-        </p>
-      </div>
+    <div className="container-page py-10">
+      <h1 className="mb-6 font-display text-3xl font-bold text-ink-900 sm:text-4xl">
+        ทะเบียนทั้งหมด
+      </h1>
 
       <Filters />
 
-      {data.items.length === 0 ? (
-        <div className="rounded-lg border bg-white p-10 text-center text-slate-500">
-          No plates match these filters.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {data.items.map((plate) => (
-            <PlateCard key={plate.id} plate={plate} />
-          ))}
-        </div>
-      )}
+      <div className="mt-8">
+        {data.items.length === 0 ? (
+          <div className="rounded-2xl bg-white p-12 text-center text-slate-500 shadow-card">
+            ไม่มีทะเบียนตามเงื่อนไขนี้
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {data.items.map((plate) => (
+              <PlateCard key={plate.id} plate={plate} />
+            ))}
+          </div>
+        )}
+      </div>
 
       {totalPages > 1 && (
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          params={searchParams}
-        />
+        <Pagination page={page} totalPages={totalPages} params={searchParams} />
       )}
-    </>
+    </div>
   );
 }
 
@@ -78,11 +74,11 @@ function Pagination({
   }
 
   return (
-    <nav className="mt-8 flex items-center justify-center gap-2">
+    <nav className="mt-10 flex items-center justify-center gap-3">
       {page > 1 && (
         <Link
           href={hrefFor(page - 1)}
-          className="rounded border bg-white px-3 py-1 text-sm hover:bg-slate-50"
+          className="rounded-full bg-ink-900 px-4 py-1.5 text-sm text-white hover:bg-ink-700"
         >
           ← Prev
         </Link>
@@ -93,7 +89,7 @@ function Pagination({
       {page < totalPages && (
         <Link
           href={hrefFor(page + 1)}
-          className="rounded border bg-white px-3 py-1 text-sm hover:bg-slate-50"
+          className="rounded-full bg-ink-900 px-4 py-1.5 text-sm text-white hover:bg-ink-700"
         >
           Next →
         </Link>
