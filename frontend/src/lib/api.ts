@@ -1,4 +1,12 @@
-import type { Plate, PlateListResponse, Theme, ThemeInput, ConfigMap } from './types';
+import type {
+  Plate,
+  PlateListResponse,
+  Theme,
+  ThemeInput,
+  ConfigMap,
+  PromoBanner,
+  PromoBannerInput,
+} from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
 
@@ -93,6 +101,28 @@ export const api = {
     }),
   deleteConfig: (token: string, key: string) =>
     request<void>(`/config/${encodeURIComponent(key)}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  listPromoBanners: (activeOnly = false) =>
+    request<{ items: PromoBanner[] }>('/promo-banners', {
+      query: activeOnly ? { active: 'true' } : undefined,
+    }),
+  createPromoBanner: (token: string, data: PromoBannerInput) =>
+    request<PromoBanner>('/promo-banners', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
+  updatePromoBanner: (token: string, id: string, data: Partial<PromoBannerInput>) =>
+    request<PromoBanner>(`/promo-banners/${id}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    }),
+  deletePromoBanner: (token: string, id: string) =>
+    request<void>(`/promo-banners/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     }),

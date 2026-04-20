@@ -1,16 +1,163 @@
 import Link from 'next/link';
+import { api } from '@/lib/api';
+import PlateCard from '@/components/PlateCard';
+import type { PromoBanner } from '@/lib/types';
+import Image from 'next/image';
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const [plateData, bannerData, config] = await Promise.all([
+    api.listPlates({ page: 1, limit: 8 }).catch(() => ({ items: [], total: 0 })),
+    api.listPromoBanners(true).catch(() => ({ items: [] as PromoBanner[] })),
+    api.listConfig().catch(() => ({} as Record<string, string>)),
+  ]);
+
   return (
     <div className="container-page py-8">
-      <Hero />
+      <Hero heroCarImageUrl={config.hero_car_image_url || null} />
       <Tagline />
       <FeatureBar />
+      <PromoBanners banners={bannerData.items} />
+      <FeaturedPlates plates={plateData.items} />
+      <Contact />
     </div>
   );
 }
 
-function Hero() {
+function PromoBanners({ banners }: { banners: PromoBanner[] }) {
+  if (banners.length === 0) return null;
+  return (
+    <section className="py-12">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {banners.map((b) => (
+          <PromoBannerCard key={b.id} banner={b} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PromoBannerCard({ banner }: { banner: PromoBanner }) {
+  return (
+    <article className="relative aspect-square overflow-hidden rounded-3xl bg-ink-900 text-white shadow-card">
+      <div className="absolute inset-0 hero-waves opacity-80" />
+      <div className="absolute inset-0 wave-lines opacity-60" />
+
+      <svg
+        aria-hidden
+        className="absolute inset-x-0 top-1/3 w-full opacity-30"
+        viewBox="0 0 400 60"
+        fill="none"
+      >
+        <path
+          d="M0 30 Q50 0 100 30 T200 30 T300 30 T400 30"
+          stroke="#4ac8dc"
+          strokeWidth="1.5"
+          fill="none"
+        />
+      </svg>
+
+      <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400/20 ring-1 ring-cyan-400/60">
+        <span className="font-display text-sm font-bold text-cyan-300">TS</span>
+      </div>
+
+      <div className="relative flex h-full flex-col p-5">
+        <div className="pr-12">
+          <h3 className="font-display text-xl font-bold leading-tight text-white sm:text-2xl">
+            {banner.headline}
+          </h3>
+          <p className="mt-1 font-display text-xl font-bold leading-tight text-cyan-400 sm:text-2xl">
+            {banner.highlight}
+          </p>
+          {banner.subheadline && (
+            <p className="mt-2 text-[11px] leading-snug text-white/70">
+              {banner.subheadline}
+            </p>
+          )}
+        </div>
+
+        <div className="relative my-4 flex flex-1 items-center justify-center">
+          {banner.image_url ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={banner.image_url}
+              alt={banner.headline}
+              className="max-h-[180px] w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+            />
+          ) : (
+            <div className="text-[80px] leading-none opacity-60">🚗</div>
+          )}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 rounded-lg bg-white px-3 py-1.5 text-center shadow-lg ring-2 ring-ink-900">
+            <div className="font-display text-lg font-bold tracking-wider text-ink-900">
+              {banner.plate_code}
+            </div>
+            <div className="text-[9px] font-medium text-ink-900">
+              {banner.plate_region}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-end justify-between gap-3 border-t border-white/15 pt-3">
+          <div>
+            <div className="font-display text-base font-bold text-cyan-400">
+              {banner.footer_title}
+            </div>
+            <div className="text-[10px] text-white/80">{banner.footer_tagline}</div>
+            <div className="mt-2 space-y-0.5 text-[10px] text-white/70">
+              <div>📞 {banner.phone}</div>
+              <div>💬 {banner.line_id}</div>
+            </div>
+          </div>
+          <div
+            aria-hidden
+            className="grid h-14 w-14 shrink-0 grid-cols-4 gap-[2px] rounded-md bg-white p-1"
+          >
+            {Array.from({ length: 16 }).map((_, i) => (
+              <span
+                key={i}
+                className={`${(i * 7 + 3) % 3 === 0 ? 'bg-ink-900' : 'bg-white'} rounded-[1px]`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function FeaturedPlates({ plates }: { plates: Awaited<ReturnType<typeof api.listPlates>>['items'] }) {
+  return (
+    <section className="py-12">
+      <div className="mb-6 flex items-end justify-between">
+        <div>
+          <span className="section-eyebrow">ทะเบียนแนะนำ</span>
+          <h2 className="mt-2 font-display text-3xl font-bold text-ink-900 sm:text-4xl">
+            ทะเบียนยอดนิยม
+          </h2>
+        </div>
+        <Link
+          href="/plates"
+          className="text-sm font-medium text-ink-900 underline-offset-4 hover:underline"
+        >
+          ดูทั้งหมด →
+        </Link>
+      </div>
+
+      {plates.length === 0 ? (
+        <div className="rounded-2xl bg-white p-12 text-center text-slate-500 shadow-card">
+          ยังไม่มีทะเบียนให้แสดง
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {plates.map((plate) => (
+            <PlateCard key={plate.id} plate={plate} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
   return (
     <section className="relative overflow-hidden rounded-[28px] bg-ink-900 text-white">
       <div className="absolute inset-0 hero-waves" />
@@ -89,7 +236,16 @@ function Hero() {
 
         <div className="relative flex items-center justify-center">
           <PlateShowcase />
-          <CarIllustration />
+          {heroCarImageUrl ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={heroCarImageUrl}
+              alt="Hero car"
+              className="relative mt-32 w-full max-w-[460px] object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.45)]"
+            />
+          ) : (
+            <CarIllustration />
+          )}
         </div>
       </div>
     </section>
@@ -247,6 +403,73 @@ function FeatureBar() {
             )}
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  const lineUrl = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://line.me/';
+  const lineQr =
+    process.env.NEXT_PUBLIC_LINE_QR_URL ??
+    'https://placehold.co/280x280/png?text=LINE+QR';
+
+  return (
+    <section
+      id="contact"
+      className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-brand via-brand-800 to-brand-700 p-8 text-white shadow-soft sm:p-12"
+    >
+      <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-brand-accent/20 blur-3xl" />
+      <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl" />
+
+      <div className="relative grid items-center gap-10 md:grid-cols-2">
+        <div>
+          <span className="section-eyebrow">Contact</span>
+          <h2 className="heading-display mt-3">พร้อมให้บริการ 24 ชม.</h2>
+          <p className="mt-3 max-w-md text-slate-300">
+            สแกน QR หรือกดปุ่มด้านล่างเพื่อแชทกับทีมงานผ่าน Line
+            สอบถามข้อมูลเพิ่มเติมหรือจองทะเบียนที่คุณสนใจได้ทันที
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href={lineUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn bg-green-500 text-white shadow-soft hover:bg-green-600"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+              </svg>
+              ติดต่อผ่าน Line
+            </a>
+            <a
+              href="tel:+66"
+              className="btn border border-white/30 text-white hover:bg-white/10"
+            >
+              โทรสอบถาม
+            </a>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <div className="relative">
+            <div className="absolute inset-0 -m-2 rounded-3xl bg-gradient-to-br from-gold-300 to-brand-accent opacity-50 blur-xl" />
+            <div className="relative rounded-2xl border border-white/20 bg-white p-5 text-center shadow-2xl">
+              <Image
+                src={lineQr}
+                alt="Line QR code"
+                width={240}
+                height={240}
+                className="mx-auto h-auto w-[220px] rounded-lg"
+                unoptimized
+              />
+              <div className="mt-3 text-xs font-semibold text-slate-700">
+                สแกนเพื่อเพิ่มเพื่อน
+              </div>
+              <div className="text-[10px] text-slate-500">@tabienselect</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

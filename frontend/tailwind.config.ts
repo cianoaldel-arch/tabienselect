@@ -53,9 +53,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Prompt', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Prompt', 'sans-serif'],
-        plate: ['"Anuphan"', 'Prompt', 'sans-serif'],
+        sans: ['Kanit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Kanit', 'sans-serif'],
+        plate: ['"Anuphan"', 'Kanit', 'sans-serif'],
       },
       boxShadow: {
         card: '0 12px 30px -12px rgba(5, 12, 26, 0.55)',

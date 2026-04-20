@@ -35,3 +35,26 @@ export type Theme = {
 export type ThemeInput = Omit<Theme, 'id' | 'created_at' | 'updated_at'>;
 
 export type ConfigMap = Record<string, string>;
+
+export type PromoBanner = {
+  id: string;
+  headline: string;
+  highlight: string;
+  subheadline: string | null;
+  plate_code: string;
+  plate_region: string;
+  image_url: string | null;
+  footer_title: string;
+  footer_tagline: string;
+  phone: string;
+  line_id: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PromoBannerInput = Omit<
+  PromoBanner,
+  'id' | 'created_at' | 'updated_at'
+>;
