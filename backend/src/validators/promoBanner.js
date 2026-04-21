@@ -8,16 +8,16 @@ const imageUrl = z
   });
 
 const base = {
-  headline: z.string().min(1).max(200),
-  highlight: z.string().min(1).max(200),
+  headline: z.string().max(200).optional(),
+  highlight: z.string().max(200).optional(),
   subheadline: z.string().max(500).nullable().optional(),
-  plate_code: z.string().min(1).max(32),
-  plate_region: z.string().min(1).max(64),
+  plate_code: z.string().max(32).optional(),
+  plate_region: z.string().max(64).optional(),
   image_url: imageUrl.nullable().optional(),
-  footer_title: z.string().min(1).max(100),
-  footer_tagline: z.string().min(1).max(100),
-  phone: z.string().min(1).max(100),
-  line_id: z.string().min(1).max(100),
+  footer_title: z.string().max(100).optional(),
+  footer_tagline: z.string().max(100).optional(),
+  phone: z.string().max(100).optional(),
+  line_id: z.string().max(100).optional(),
   sort_order: z.number().int().min(0).max(9999).optional(),
   is_active: z.boolean().optional(),
 };

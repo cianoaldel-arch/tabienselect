@@ -18,6 +18,7 @@ exports.updatePlateSchema = z.object(plateBase).partial();
 exports.listPlatesQuerySchema = z.object({
   category: z.string().optional(),
   plate_type: z.string().optional(),
+  q: z.string().trim().max(64).optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });

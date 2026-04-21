@@ -14,8 +14,19 @@ async function getById(id) {
   return banner;
 }
 
+const TEXT_DEFAULTS = {
+  headline: '',
+  highlight: '',
+  plate_code: '',
+  plate_region: '',
+  footer_title: '',
+  footer_tagline: '',
+  phone: '',
+  line_id: '',
+};
+
 function create(data) {
-  return prisma.promoBanner.create({ data });
+  return prisma.promoBanner.create({ data: { ...TEXT_DEFAULTS, ...data } });
 }
 
 async function update(id, data) {

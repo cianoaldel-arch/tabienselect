@@ -1,10 +1,17 @@
 const prisma = require('../config/prisma');
 const HttpError = require('../utils/HttpError');
 
-async function list({ category, plate_type, page, limit }) {
+async function list({ category, plate_type, q, page, limit }) {
   const where = {};
   if (category) where.category = category;
   if (plate_type) where.plate_type = plate_type;
+  if (q) {
+    where.OR = [
+      { full_plate: { contains: q, mode: 'insensitive' } },
+      { number: { contains: q, mode: 'insensitive' } },
+      { prefix: { contains: q, mode: 'insensitive' } },
+    ];
+  }
 
   const [items, total] = await Promise.all([
     prisma.plate.findMany({

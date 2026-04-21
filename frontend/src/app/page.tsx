@@ -11,9 +11,12 @@ export default async function LandingPage() {
     api.listConfig().catch(() => ({} as Record<string, string>)),
   ]);
 
+    const ImageSite = '/porcheslanding.png';
+
+
   return (
     <div className="container-page py-8">
-      <Hero heroCarImageUrl={config.hero_car_image_url || null} />
+      <Hero heroCarImageUrl={ImageSite || null} />
       <Tagline />
       <FeatureBar />
       <PromoBanners banners={bannerData.items} />
@@ -24,11 +27,12 @@ export default async function LandingPage() {
 }
 
 function PromoBanners({ banners }: { banners: PromoBanner[] }) {
-  if (banners.length === 0) return null;
+  const withImages = banners.filter((b) => !!b.image_url);
+  if (withImages.length === 0) return null;
   return (
     <section className="py-12">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {banners.map((b) => (
+        {withImages.map((b) => (
           <PromoBannerCard key={b.id} banner={b} />
         ))}
       </div>
@@ -38,88 +42,13 @@ function PromoBanners({ banners }: { banners: PromoBanner[] }) {
 
 function PromoBannerCard({ banner }: { banner: PromoBanner }) {
   return (
-    <article className="relative aspect-square overflow-hidden rounded-3xl bg-ink-900 text-white shadow-card">
-      <div className="absolute inset-0 hero-waves opacity-80" />
-      <div className="absolute inset-0 wave-lines opacity-60" />
-
-      <svg
-        aria-hidden
-        className="absolute inset-x-0 top-1/3 w-full opacity-30"
-        viewBox="0 0 400 60"
-        fill="none"
-      >
-        <path
-          d="M0 30 Q50 0 100 30 T200 30 T300 30 T400 30"
-          stroke="#4ac8dc"
-          strokeWidth="1.5"
-          fill="none"
-        />
-      </svg>
-
-      <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400/20 ring-1 ring-cyan-400/60">
-        <span className="font-display text-sm font-bold text-cyan-300">TS</span>
-      </div>
-
-      <div className="relative flex h-full flex-col p-5">
-        <div className="pr-12">
-          <h3 className="font-display text-xl font-bold leading-tight text-white sm:text-2xl">
-            {banner.headline}
-          </h3>
-          <p className="mt-1 font-display text-xl font-bold leading-tight text-cyan-400 sm:text-2xl">
-            {banner.highlight}
-          </p>
-          {banner.subheadline && (
-            <p className="mt-2 text-[11px] leading-snug text-white/70">
-              {banner.subheadline}
-            </p>
-          )}
-        </div>
-
-        <div className="relative my-4 flex flex-1 items-center justify-center">
-          {banner.image_url ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={banner.image_url}
-              alt={banner.headline}
-              className="max-h-[180px] w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
-            />
-          ) : (
-            <div className="text-[80px] leading-none opacity-60">🚗</div>
-          )}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 rounded-lg bg-white px-3 py-1.5 text-center shadow-lg ring-2 ring-ink-900">
-            <div className="font-display text-lg font-bold tracking-wider text-ink-900">
-              {banner.plate_code}
-            </div>
-            <div className="text-[9px] font-medium text-ink-900">
-              {banner.plate_region}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-end justify-between gap-3 border-t border-white/15 pt-3">
-          <div>
-            <div className="font-display text-base font-bold text-cyan-400">
-              {banner.footer_title}
-            </div>
-            <div className="text-[10px] text-white/80">{banner.footer_tagline}</div>
-            <div className="mt-2 space-y-0.5 text-[10px] text-white/70">
-              <div>📞 {banner.phone}</div>
-              <div>💬 {banner.line_id}</div>
-            </div>
-          </div>
-          <div
-            aria-hidden
-            className="grid h-14 w-14 shrink-0 grid-cols-4 gap-[2px] rounded-md bg-white p-1"
-          >
-            {Array.from({ length: 16 }).map((_, i) => (
-              <span
-                key={i}
-                className={`${(i * 7 + 3) % 3 === 0 ? 'bg-ink-900' : 'bg-white'} rounded-[1px]`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+    <article className="relative aspect-square overflow-hidden rounded-3xl bg-ink-900 shadow-card">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={banner.image_url ?? ''}
+        alt={banner.headline || 'Promotion'}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
     </article>
   );
 }
@@ -254,23 +183,11 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
 
 function PlateShowcase() {
   return (
-    <div className="absolute right-4 top-0 z-10 rounded-2xl bg-white px-6 py-3 shadow-2xl ring-2 ring-ink-900 sm:right-16">
+    <div
+      className="absolute right-4 top-0 z-10 overflow-hidden rounded-2xl bg-white bg-cover bg-center px-6 py-3 shadow-2xl ring-2 ring-ink-900 sm:right-16"
+      style={{ backgroundImage: "url('/plate-bg.png')" }}
+    >
       <div className="relative">
-        <svg
-          aria-hidden
-          className="absolute inset-x-2 top-1/2 -translate-y-1/2 opacity-60"
-          width="95%"
-          height="16"
-          viewBox="0 0 200 16"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 8 Q25 0 50 8 T100 8 T150 8 T200 8"
-            stroke="#0a1628"
-            strokeWidth="1.2"
-            fill="none"
-          />
-        </svg>
         <div className="relative font-display text-5xl font-bold tracking-wider text-ink-900 sm:text-6xl">
           7บข <span className="ml-2">28</span>
         </div>

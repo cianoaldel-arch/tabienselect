@@ -21,6 +21,7 @@ export default async function PlatesPage({
   const data = await api.listPlates({
     category: searchParams.category,
     plate_type: searchParams.plate_type,
+    q: searchParams.q,
     page,
     limit: LIMIT,
   });
@@ -69,6 +70,7 @@ function Pagination({
     const sp = new URLSearchParams();
     if (params.category) sp.set('category', params.category);
     if (params.plate_type) sp.set('plate_type', params.plate_type);
+    if (params.q) sp.set('q', params.q);
     sp.set('page', String(p));
     return `/plates?${sp.toString()}`;
   }

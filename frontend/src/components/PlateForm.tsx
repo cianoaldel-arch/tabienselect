@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Plate } from '@/lib/types';
+import { PLATE_CATEGORIES } from '@/lib/categories';
 
 export type PlateFormValues = {
   prefix: string;
@@ -29,7 +30,7 @@ const blankState: FormState = {
   prefix: '',
   number: '',
   full_plate: '',
-  category: 'Premium',
+  category: PLATE_CATEGORIES[0].value,
   plate_type: 'Sedan',
   numerology_sum: '',
   line_qr_url: '',
@@ -184,9 +185,11 @@ export default function PlateForm({
             onChange={(e) => update('category', e.target.value)}
             className={inputCls}
           >
-            <option value="Premium">Premium</option>
-            <option value="Standard">Standard</option>
-            <option value="Lucky">Lucky</option>
+            {PLATE_CATEGORIES.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
           </select>
         </Field>
         <Field label="Plate type" error={errors.plate_type}>

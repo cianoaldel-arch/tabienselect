@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { Plate } from '@/lib/types';
+import { PLATE_CATEGORIES } from '@/lib/categories';
 
 const LIMIT = 20;
 
@@ -135,9 +136,11 @@ export default function AdminPlatesListPage() {
             className="mt-1 w-40 rounded-md border border-slate-200 px-3 py-1.5 text-sm focus:border-brand-accent focus:outline-none"
           >
             <option value="">All</option>
-            <option value="Premium">Premium</option>
-            <option value="Standard">Standard</option>
-            <option value="Lucky">Lucky</option>
+            {PLATE_CATEGORIES.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
           </select>
         </label>
         <button

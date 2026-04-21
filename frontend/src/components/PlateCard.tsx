@@ -20,20 +20,6 @@ export default function PlateCard({ plate }: { plate: Plate }) {
         </div>
 
         <div className="plate-box mx-auto w-full">
-          <svg
-            aria-hidden
-            className="absolute inset-x-3 top-1/2 -translate-y-1/2 opacity-50"
-            height="10"
-            viewBox="0 0 200 10"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M0 5 Q25 0 50 5 T100 5 T150 5 T200 5"
-              stroke="#0a1628"
-              strokeWidth="1"
-              fill="none"
-            />
-          </svg>
           <div className="relative text-center font-display text-3xl font-bold tracking-wider">
             {plate.full_plate}
           </div>

@@ -29,20 +29,6 @@ export default async function PlateDetailPage({
         <section className="rounded-2xl bg-ink-900 p-8 text-white shadow-card">
           <div className="grid grid-cols-[1fr_auto] items-center gap-8">
             <div className="plate-box py-6">
-              <svg
-                aria-hidden
-                className="absolute inset-x-3 top-1/2 -translate-y-1/2 opacity-50"
-                height="14"
-                viewBox="0 0 200 14"
-                preserveAspectRatio="none"
-              >
-                <path
-                  d="M0 7 Q25 0 50 7 T100 7 T150 7 T200 7"
-                  stroke="#0a1628"
-                  strokeWidth="1.2"
-                  fill="none"
-                />
-              </svg>
               <div className="relative text-center font-display text-5xl font-bold tracking-wider sm:text-6xl">
                 {plate!.full_plate}
               </div>

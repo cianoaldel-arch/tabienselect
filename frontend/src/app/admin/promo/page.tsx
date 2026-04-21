@@ -5,16 +5,16 @@ import { api } from '@/lib/api';
 import type { PromoBanner, PromoBannerInput } from '@/lib/types';
 
 const EMPTY: PromoBannerInput = {
-  headline: 'หัวข้อใหม่',
-  highlight: 'ไฮไลต์',
+  headline: '',
+  highlight: '',
   subheadline: null,
-  plate_code: '7บข',
-  plate_region: 'กรุงเทพมหานคร',
+  plate_code: '',
+  plate_region: '',
   image_url: null,
-  footer_title: 'รับจองทะเบียน',
-  footer_tagline: 'รถยนต์หมวดใหม่',
-  phone: '082-416-6551 คุณน็อต',
-  line_id: '@tabienselect',
+  footer_title: '',
+  footer_tagline: '',
+  phone: '',
+  line_id: '',
   sort_order: 0,
   is_active: true,
 };
@@ -36,6 +36,7 @@ export default function AdminPromoPage() {
   const [error, setError] = useState<string | null>(null);
   const [flash, setFlash] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const addFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setToken(localStorage.getItem('admin_token'));
@@ -59,19 +60,31 @@ export default function AdminPromoPage() {
     setTimeout(() => setFlash(null), 2000);
   }
 
-  async function addBanner() {
+  async function onAddImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (addFileRef.current) addFileRef.current.value = '';
+    if (!file) return;
     if (!token) return setError('Login required');
+    if (!file.type.startsWith('image/')) return setError('Please choose an image file');
+    if (file.size > MAX_IMAGE_BYTES)
+      return setError(`Image too large (max ${Math.round(MAX_IMAGE_BYTES / 1024 / 1024)}MB)`);
+
     setBusy(true);
     setError(null);
     try {
+      const dataUrl = await fileToDataUrl(file);
       const nextOrder = banners.length
         ? Math.max(...banners.map((b) => b.sort_order)) + 1
         : 0;
-      await api.createPromoBanner(token, { ...EMPTY, sort_order: nextOrder });
+      await api.createPromoBanner(token, {
+        ...EMPTY,
+        image_url: dataUrl,
+        sort_order: nextOrder,
+      });
       notify('Added banner');
       await load();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Create failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Create failed');
     } finally {
       setBusy(false);
     }
@@ -112,13 +125,17 @@ export default function AdminPromoPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-display text-3xl font-bold text-brand">Promo banners</h1>
-        <button
-          onClick={addBanner}
-          disabled={busy}
-          className="btn-accent disabled:opacity-60"
-        >
-          + Add banner
-        </button>
+        <label className="btn-accent cursor-pointer disabled:opacity-60">
+          {busy ? 'Uploading…' : '+ Add image'}
+          <input
+            ref={addFileRef}
+            type="file"
+            accept="image/*"
+            onChange={onAddImage}
+            disabled={busy}
+            className="hidden"
+          />
+        </label>
       </div>
 
       {flash && (
@@ -134,7 +151,7 @@ export default function AdminPromoPage() {
 
       {banners.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
-          No banners yet. Click "Add banner" to create one.
+          No banners yet. Click "Add image" to upload one.
         </div>
       ) : (
         <div className="space-y-4">
@@ -203,11 +220,8 @@ function BannerEditor({
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <span className="font-display text-sm font-semibold text-slate-700">
-            {banner.headline || 'Untitled'}
-          </span>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-4">
           <label className="flex items-center gap-1.5 text-xs text-slate-600">
             <input
               type="checkbox"
@@ -215,6 +229,15 @@ function BannerEditor({
               onChange={(e) => set('is_active', e.target.checked)}
             />
             Active
+          </label>
+          <label className="flex items-center gap-1.5 text-xs text-slate-600">
+            Sort
+            <input
+              type="number"
+              value={draft.sort_order ?? 0}
+              onChange={(e) => set('sort_order', Number(e.target.value) || 0)}
+              className="w-16 rounded-md border border-slate-200 px-2 py-1 text-sm"
+            />
           </label>
         </div>
         <div className="flex gap-2">
@@ -234,20 +257,20 @@ function BannerEditor({
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-[200px_1fr]">
-        <div className="flex flex-col gap-2">
-          <div className="flex h-40 w-full items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-            {draft.image_url ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={draft.image_url}
-                alt="preview"
-                className="max-h-full max-w-full object-contain"
-              />
-            ) : (
-              <span className="text-xs text-slate-400">No image</span>
-            )}
-          </div>
+      <div className="flex flex-col gap-3 md:flex-row md:items-start">
+        <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50 md:w-60">
+          {draft.image_url ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={draft.image_url}
+              alt="preview"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="text-xs text-slate-400">No image</span>
+          )}
+        </div>
+        <div className="flex flex-1 flex-col gap-2">
           <input
             ref={fileRef}
             type="file"
@@ -256,71 +279,15 @@ function BannerEditor({
             className="block w-full text-xs text-slate-600 file:mr-2 file:rounded-md file:border-0 file:bg-brand file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-brand-700"
             disabled={uploading}
           />
-          <input
-            value={draft.image_url ?? ''}
-            onChange={(e) => set('image_url', e.target.value || null)}
-            placeholder="or paste an image URL"
-            className="w-full rounded-md border border-slate-200 px-2 py-1 text-xs"
-          />
           {draft.image_url && (
             <button
               type="button"
               onClick={() => set('image_url', null)}
-              className="text-xs text-slate-500 hover:text-red-600"
+              className="self-start text-xs text-slate-500 hover:text-red-600"
             >
               Remove image
             </button>
           )}
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-2">
-          <Field label="Headline">
-            <TextInput value={draft.headline} onChange={(v) => set('headline', v)} />
-          </Field>
-          <Field label="Highlight (cyan)">
-            <TextInput value={draft.highlight} onChange={(v) => set('highlight', v)} />
-          </Field>
-          <Field label="Subheadline" full>
-            <TextInput
-              value={draft.subheadline ?? ''}
-              onChange={(v) => set('subheadline', v || null)}
-            />
-          </Field>
-          <Field label="Plate code">
-            <TextInput value={draft.plate_code} onChange={(v) => set('plate_code', v)} />
-          </Field>
-          <Field label="Plate region">
-            <TextInput
-              value={draft.plate_region}
-              onChange={(v) => set('plate_region', v)}
-            />
-          </Field>
-          <Field label="Footer title">
-            <TextInput
-              value={draft.footer_title}
-              onChange={(v) => set('footer_title', v)}
-            />
-          </Field>
-          <Field label="Footer tagline">
-            <TextInput
-              value={draft.footer_tagline}
-              onChange={(v) => set('footer_tagline', v)}
-            />
-          </Field>
-          <Field label="Phone">
-            <TextInput value={draft.phone} onChange={(v) => set('phone', v)} />
-          </Field>
-          <Field label="LINE ID">
-            <TextInput value={draft.line_id} onChange={(v) => set('line_id', v)} />
-          </Field>
-          <Field label="Sort order">
-            <input
-              type="number"
-              value={draft.sort_order ?? 0}
-              onChange={(e) => set('sort_order', Number(e.target.value) || 0)}
-              className="w-full rounded-md border border-slate-200 px-3 py-1.5 text-sm"
-            />
-          </Field>
         </div>
       </div>
     </div>
@@ -344,37 +311,3 @@ function toInput(b: PromoBanner): PromoBannerInput {
   };
 }
 
-function Field({
-  label,
-  full,
-  children,
-}: {
-  label: string;
-  full?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <label
-      className={`flex flex-col text-xs text-slate-600 ${full ? 'md:col-span-2' : ''}`}
-    >
-      {label}
-      <span className="mt-1">{children}</span>
-    </label>
-  );
-}
-
-function TextInput({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <input
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-md border border-slate-200 px-3 py-1.5 text-sm"
-    />
-  );
-}

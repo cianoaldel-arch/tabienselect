@@ -38,7 +38,11 @@ function SiteHeader({ logoUrl, siteName }: { logoUrl: string; siteName: string }
       <div className="container-page flex h-[72px] items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoUrl} alt={siteName} className="h-20 w-20" />
+          <img
+            src={logoUrl}
+            alt={siteName}
+            className="h-11 w-auto max-w-[160px] object-contain"
+          />
           <span className="text-[17px] font-semibold tracking-[0.2em]">
             {siteName}
           </span>
@@ -107,9 +111,9 @@ function SiteFooter() {
         <FooterCol
           title="หมวดทะเบียน"
           links={[
-            { label: 'Premium', href: '/plates?category=Premium' },
-            { label: 'Lucky', href: '/plates?category=Lucky' },
-            { label: 'Standard', href: '/plates?category=Standard' },
+            { label: '2-digit numbers', href: '/plates?category=2-digit' },
+            { label: '3-digit numbers', href: '/plates?category=3-digit' },
+            { label: 'Popular numbers', href: '/plates?category=popular' },
           ]}
         />
         <div>
