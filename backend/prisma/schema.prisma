@@ -15,6 +15,7 @@ model Plate {
   category       String
   plate_type     String
   numerology_sum Int
+  price          Int      @default(0)
   line_qr_url    String
   contact_text   String
   created_at     DateTime @default(now())
@@ -49,4 +50,25 @@ model Config {
   key        String   @unique
   value      String
   updated_at DateTime @updatedAt
+}
+
+model PromoBanner {
+  id             String   @id @default(cuid())
+  headline       String
+  highlight      String
+  subheadline    String?
+  plate_code     String
+  plate_region   String
+  image_url      String?
+  footer_title   String
+  footer_tagline String
+  phone          String
+  line_id        String
+  sort_order     Int      @default(0)
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  @@index([is_active])
+  @@index([sort_order])
 }
