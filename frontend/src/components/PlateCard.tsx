@@ -3,19 +3,25 @@ import type { Plate } from '@/lib/types';
 
 export default function PlateCard({ plate }: { plate: Plate }) {
   return (
-    <div className="hover-lift group animate-fade-up overflow-hidden rounded-2xl bg-ink-900 text-white shadow-card transition-shadow duration-300 hover:shadow-2xl w-[90%]">
+    <div
+      className="hover-lift group animate-fade-up overflow-hidden rounded-2xl text-white shadow-card transition-shadow duration-300 hover:shadow-2xl w-[90%]"
+      style={{ background: 'var(--color-primary)' }}
+    >
       <div className="p-5">
         <div className="mb-3 flex items-start justify-between">
           <span className="text-[11px] font-semibold tracking-[0.2em] text-white/60">
             PLATE
           </span>
           <div className="flex flex-col items-start gap-1.5">
-            <span className="rounded-full bg-cyan-400 px-3 py-0.5 text-[11px] font-medium text-ink-900">
+            <span
+              className="rounded-full px-3 py-0.5 text-[11px] font-medium"
+              style={{
+                background: 'var(--color-accent)',
+                color: 'var(--color-foreground)',
+              }}
+            >
               ผลรวม {plate.numerology_sum}
             </span>
-            {/* <span className="rounded-full bg-cyan-400 px-3 py-0.5 text-[11px] font-medium text-ink-900">
-              หมวดหมู่
-            </span> */}
           </div>
         </div>
 
@@ -35,7 +41,8 @@ export default function PlateCard({ plate }: { plate: Plate }) {
         </span>
         <Link
           href={`/plates/${plate.id}`}
-          className="text-sm text-cyan-400 hover:text-cyan-300"
+          className="text-sm transition hover:opacity-80"
+          style={{ color: 'var(--color-accent)' }}
         >
           ดูรายละเอียด
         </Link>

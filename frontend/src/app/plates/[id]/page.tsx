@@ -25,13 +25,17 @@ export default async function PlateDetailPage({
     <div className="container-page py-10">
       <Link
         href="/plates"
-        className="text-sm text-slate-500 hover:text-ink-900"
+        className="text-sm text-slate-500 transition hover:opacity-80"
+        style={{ color: 'var(--color-muted)' }}
       >
         ← Back to listing
       </Link>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <section className="rounded-2xl bg-ink-900 p-8 text-white shadow-card">
+        <section
+          className="rounded-2xl p-8 text-white shadow-card"
+          style={{ background: 'var(--color-primary)' }}
+        >
           <div className="grid grid-cols-[1fr_auto] items-start gap-8">
             <div className="plate-box py-6">
               <div className="relative text-center font-display text-5xl font-bold tracking-wider sm:text-6xl">
@@ -43,12 +47,15 @@ export default async function PlateDetailPage({
             </div>
 
             <div className="flex flex-col items-start gap-3">
-              <span className="rounded-xl bg-cyan-400 px-5 py-2 text-start text-[15px] font-medium text-ink-900">
+              <span
+                className="rounded-xl px-5 py-2 text-start text-[15px] font-medium"
+                style={{
+                  background: 'var(--color-accent)',
+                  color: 'var(--color-foreground)',
+                }}
+              >
                 ผลรวม {plate!.numerology_sum}
               </span>
-              {/* <span className="rounded-xl bg-cyan-400 px-5 py-2 text-center text-[15px] font-medium text-ink-900">
-                หมวดหมู่
-              </span> */}
             </div>
           </div>
 
@@ -66,7 +73,12 @@ export default async function PlateDetailPage({
         </section>
 
         <aside className="rounded-2xl bg-white p-6 text-center shadow-card">
-          <div className="mb-4 text-lg font-semibold text-ink-900">สนใจติดต่อ</div>
+          <div
+            className="mb-4 text-lg font-semibold"
+            style={{ color: 'var(--color-foreground)' }}
+          >
+            สนใจติดต่อ
+          </div>
           <div className="mx-auto flex aspect-square w-full max-w-[260px] items-center justify-center rounded-xl bg-slate-200 text-slate-500">
             {plate!.line_qr_url ? (
               <Image
@@ -81,8 +93,14 @@ export default async function PlateDetailPage({
               <span className="text-xl font-semibold">LINE QR</span>
             )}
           </div>
-          <div className="mt-5 flex items-center justify-center gap-2 text-ink-900">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-900 text-white">
+          <div
+            className="mt-5 flex items-center justify-center gap-2"
+            style={{ color: 'var(--color-foreground)' }}
+          >
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-full text-white"
+              style={{ background: 'var(--color-primary)' }}
+            >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24 11.72 11.72 0 003.66.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.66 1 1 0 01-.24 1.05z" />
               </svg>

@@ -288,7 +288,7 @@ function Tagline() {
   return (
     <div className="animate-fade-up py-10 text-center">
       <p className="font-display text-2xl font-semibold text-ink-900 sm:text-3xl">
-        จองง่าย| เลือกได้ | ได้จริง
+        จองง่าย | เลือกได้ | ได้จริง
       </p>
     </div>
   );
@@ -309,7 +309,13 @@ function FeatureBar() {
             stroke="#ffffff"
             strokeWidth="1.6"
           />
-          <path d="M8.5 12l2.5 2.5 4.5-5" stroke="#5fd0e3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M8.5 12l2.5 2.5 4.5-5"
+            style={{ stroke: 'var(--color-accent)' }}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       ),
       bottom: 'เลขแท้ ถูกต้องตามกฎหมาย',
@@ -324,7 +330,7 @@ function FeatureBar() {
           />
           <path
             d="M17 8c-2.2 0-3.8 1.6-3.8 3.7 0 3.4 3.8 5.2 6 7.5 2.3-2.3 6.1-4.1 6.1-7.5C25.3 9.6 23.7 8 21.5 8c-1.3 0-2.2.7-2.3 1.9C19.1 8.7 18.2 8 17 8z"
-            fill="#5fd0e3"
+            style={{ fill: 'var(--color-accent)' }}
             transform="translate(-2 0)"
           />
         </svg>
@@ -339,7 +345,10 @@ function FeatureBar() {
   ];
 
   return (
-    <section className="animate-fade-up rounded-2xl bg-ink-900 px-6 py-7 text-white shadow-card sm:px-10">
+    <section
+      className="animate-fade-up rounded-2xl px-6 py-7 text-white shadow-card sm:px-10"
+      style={{ background: 'var(--color-primary)' }}
+    >
       <div className="grid grid-cols-2 items-center gap-6 lg:grid-cols-4 lg:divide-x lg:divide-white/15">
         {items.map((it, i) => (
           <div
@@ -350,12 +359,22 @@ function FeatureBar() {
             {it.isStat ? (
               <div className="text-center">
                 <div className="font-display text-3xl font-bold sm:text-4xl">{it.top}</div>
-                <div className="mt-1 text-xs text-cyan-400 sm:text-sm">{it.bottom}</div>
+                <div
+                  className="mt-1 text-xs sm:text-sm"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {it.bottom}
+                </div>
               </div>
             ) : (
               <>
                 <div className="shrink-0">{it.icon}</div>
-                <div className="text-xs text-cyan-400 sm:text-sm">{it.bottom}</div>
+                <div
+                  className="text-xs sm:text-sm"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {it.bottom}
+                </div>
               </>
             )}
           </div>
