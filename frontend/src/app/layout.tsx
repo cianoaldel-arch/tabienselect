@@ -23,7 +23,7 @@ export default async function RootLayout({
       <body className="font-sans" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
         <SiteHeader logoUrl={logoUrl} siteName={siteName} />
         <main>{children}</main>
-        <SiteFooter />
+        <SiteFooter logoUrl={logoUrl} siteName={siteName} />
       </body>
     </html>
   );
@@ -82,20 +82,23 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   );
 }
 
-function SiteFooter() {
+function SiteFooter({ logoUrl, siteName }: { logoUrl: string; siteName: string }) {
   return (
-    <footer className="mt-24 border-t border-slate-200 bg-white">
-      <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-24 bg-ink-900 text-white">
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-sm font-bold text-gold-400">
-              TS
+          <Link href="/" className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logoUrl}
+              alt={siteName}
+              className="h-11 w-auto max-w-[160px] object-contain"
+            />
+            <span className="text-[17px] font-semibold tracking-[0.2em]">
+              {siteName}
             </span>
-            <span className="font-display text-lg font-bold">
-              Tabien<span className="text-brand-accent">Select</span>
-            </span>
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate-600">
+          </Link>
+          <p className="mt-4 text-sm leading-relaxed text-white/70">
             ทะเบียนสวย เลขมงคล คัดพิเศษ สำหรับลูกค้าที่ใส่ใจรายละเอียด
           </p>
         </div>
@@ -117,17 +120,22 @@ function SiteFooter() {
           ]}
         />
         <div>
-          <div className="text-sm font-semibold text-brand">ติดตามเรา</div>
-          <p className="mt-3 text-sm text-slate-600">
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-400">
+            ติดตามเรา
+          </div>
+          <p className="mt-4 text-sm leading-relaxed text-white/70">
             ติดต่อทีมงานผ่าน Line ได้ตลอด 24 ชม.
           </p>
-          <Link href="/#contact" className="btn-ghost mt-4 text-xs">
+          <Link
+            href="/#contact"
+            className="mt-5 inline-flex h-10 items-center rounded-full bg-cyan-400 px-5 text-xs font-semibold text-ink-900 hover:bg-cyan-300"
+          >
             แชทกับทีมงาน →
           </Link>
         </div>
       </div>
-      <div className="border-t border-slate-100 py-5 text-center text-xs text-slate-500">
-        &copy; {new Date().getFullYear()} TabienSelect — All rights reserved.
+      <div className="border-t border-white/10 py-5 text-center text-xs text-white/50">
+        &copy; {new Date().getFullYear()} {siteName} — All rights reserved.
       </div>
     </footer>
   );
@@ -142,11 +150,13 @@ function FooterCol({
 }) {
   return (
     <div>
-      <div className="text-sm font-semibold text-brand">{title}</div>
-      <ul className="mt-3 space-y-2 text-sm text-slate-600">
+      <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-400">
+        {title}
+      </div>
+      <ul className="mt-4 space-y-2.5 text-sm text-white/70">
         {links.map((l) => (
           <li key={l.href + l.label}>
-            <Link href={l.href} className="hover:text-brand-accent">
+            <Link href={l.href} className="transition hover:text-cyan-400">
               {l.label}
             </Link>
           </li>

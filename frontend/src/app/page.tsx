@@ -42,12 +42,12 @@ function PromoBanners({ banners }: { banners: PromoBanner[] }) {
 
 function PromoBannerCard({ banner }: { banner: PromoBanner }) {
   return (
-    <article className="relative aspect-square overflow-hidden rounded-3xl bg-ink-900 shadow-card">
+    <article className="animate-fade-up hover-lift group relative aspect-square overflow-hidden rounded-3xl bg-ink-900 shadow-card">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={banner.image_url ?? ''}
         alt={banner.headline || 'Promotion'}
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
       />
     </article>
   );
@@ -115,12 +115,12 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
 
       <div className="relative grid items-center gap-10 px-10 py-16 lg:grid-cols-[1.1fr_1fr] lg:px-16 lg:py-20">
         <div>
-          <h1 className="font-display text-5xl font-bold leading-[1.1] sm:text-6xl">
+          <h1 className="animate-fade-up font-display text-5xl font-bold leading-[1.1] sm:text-6xl">
             รับจอง<span className="text-cyan-400">ทะเบียน</span>
             <br />
             <span className="text-white/95">รถยนต์หมวดใหม่</span>
           </h1>
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-lg text-cyan-400">
+          <div className="animate-fade-up animate-delay-200 mt-5 flex flex-wrap items-center gap-3 text-lg text-cyan-400">
             <span>เลขมงคล</span>
             <span className="text-white/40">|</span>
             <span>เลขศาสตร์</span>
@@ -128,16 +128,16 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
             <span>เลขวันเกิด</span>
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="animate-fade-up animate-delay-300 mt-10 flex flex-wrap gap-4">
             <Link
               href="/plates"
-              className="rounded-full bg-cyan-400 px-8 py-3 text-[15px] font-medium text-ink-900 hover:bg-cyan-300"
+              className="rounded-full bg-cyan-400 px-8 py-3 text-[15px] font-medium text-ink-900 transition hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-lg"
             >
               ดูทะเบียน
             </Link>
             <a
               href="#contact"
-              className="rounded-full border border-white/90 px-8 py-3 text-[15px] font-medium text-white hover:bg-white hover:text-ink-900"
+              className="rounded-full border border-white/90 px-8 py-3 text-[15px] font-medium text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-ink-900"
             >
               ติดต่อเรา
             </a>
@@ -170,7 +170,7 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
             <img
               src={heroCarImageUrl}
               alt="Hero car"
-              className="relative mt-32 w-full max-w-[460px] object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.45)]"
+              className="animate-fade-up animate-delay-500 animate-float relative mt-32 w-full max-w-[460px] object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.45)]"
             />
           ) : (
             <CarIllustration />
@@ -184,7 +184,7 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
 function PlateShowcase() {
   return (
     <div
-      className="absolute right-4 top-0 z-10 overflow-hidden rounded-2xl bg-white bg-cover bg-center px-6 py-3 shadow-2xl ring-2 ring-ink-900 sm:right-16"
+      className="animate-pop-in animate-delay-300 absolute right-4 top-0 z-10 overflow-hidden rounded-2xl bg-white bg-cover bg-center px-6 py-3 shadow-2xl ring-2 ring-ink-900 sm:right-16"
       style={{ backgroundImage: "url('/plate-bg.png')" }}
     >
       <div className="relative">
@@ -247,7 +247,7 @@ function CarIllustration() {
 
 function Tagline() {
   return (
-    <div className="py-10 text-center">
+    <div className="animate-fade-up py-10 text-center">
       <p className="font-display text-2xl font-semibold text-ink-900 sm:text-3xl">
         จองง่าย| เลือกได้ | ได้จริง
       </p>
@@ -300,12 +300,13 @@ function FeatureBar() {
   ];
 
   return (
-    <section className="rounded-2xl bg-ink-900 px-6 py-7 text-white shadow-card sm:px-10">
+    <section className="animate-fade-up rounded-2xl bg-ink-900 px-6 py-7 text-white shadow-card sm:px-10">
       <div className="grid grid-cols-2 items-center gap-6 lg:grid-cols-4 lg:divide-x lg:divide-white/15">
         {items.map((it, i) => (
           <div
             key={i}
-            className={`flex items-center justify-center gap-4 ${i > 0 ? 'lg:pl-6' : ''}`}
+            className={`animate-fade-up flex items-center justify-center gap-4 ${i > 0 ? 'lg:pl-6' : ''}`}
+            style={{ animationDelay: `${i * 120}ms` }}
           >
             {it.isStat ? (
               <div className="text-center">

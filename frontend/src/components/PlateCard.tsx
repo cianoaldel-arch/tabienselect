@@ -3,7 +3,7 @@ import type { Plate } from '@/lib/types';
 
 export default function PlateCard({ plate }: { plate: Plate }) {
   return (
-    <div className="overflow-hidden rounded-2xl bg-ink-900 text-white shadow-card">
+    <div className="hover-lift group animate-fade-up overflow-hidden rounded-2xl bg-ink-900 text-white shadow-card transition-shadow duration-300 hover:shadow-2xl">
       <div className="p-5">
         <div className="mb-3 flex items-start justify-between">
           <span className="text-[11px] font-semibold tracking-[0.2em] text-white/60">
@@ -19,7 +19,7 @@ export default function PlateCard({ plate }: { plate: Plate }) {
           </div>
         </div>
 
-        <div className="plate-box mx-auto w-full">
+        <div className="plate-box mx-auto w-full transition-transform duration-300 ease-out group-hover:scale-[1.03]">
           <div className="relative text-center font-display text-3xl font-bold tracking-wider">
             {plate.full_plate}
           </div>
