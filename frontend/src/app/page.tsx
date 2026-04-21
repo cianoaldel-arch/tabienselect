@@ -47,7 +47,7 @@ function PromoBanners({ banners }: { banners: PromoBanner[] }) {
   const withImages = banners.filter((b) => !!b.image_url);
   if (withImages.length === 0) return null;
   return (
-    <section className="py-12">
+    <section id="why" className="scroll-mt-24 py-12">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {withImages.map((b) => (
           <PromoBannerCard key={b.id} banner={b} />
