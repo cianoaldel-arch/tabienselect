@@ -16,6 +16,11 @@ export default async function PlateDetailPage({
     notFound();
   }
 
+    const lineUrl = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://lin.ee/WFUSWAW';
+    const lineQr =
+      '/line-qr-not.png';
+
+
   return (
     <div className="container-page py-10">
       <Link
@@ -27,7 +32,7 @@ export default async function PlateDetailPage({
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <section className="rounded-2xl bg-ink-900 p-8 text-white shadow-card">
-          <div className="grid grid-cols-[1fr_auto] items-center gap-8">
+          <div className="grid grid-cols-[1fr_auto] items-start gap-8">
             <div className="plate-box py-6">
               <div className="relative text-center font-display text-5xl font-bold tracking-wider sm:text-6xl">
                 {plate!.full_plate}
@@ -37,13 +42,13 @@ export default async function PlateDetailPage({
               </div>
             </div>
 
-            <div className="flex flex-col items-stretch gap-3">
-              <span className="rounded-xl bg-white px-5 py-2 text-center text-[15px] font-medium text-ink-900">
+            <div className="flex flex-col items-start gap-3">
+              <span className="rounded-xl bg-cyan-400 px-5 py-2 text-start text-[15px] font-medium text-ink-900">
                 ผลรวม {plate!.numerology_sum}
               </span>
-              <span className="rounded-xl bg-cyan-400 px-5 py-2 text-center text-[15px] font-medium text-ink-900">
+              {/* <span className="rounded-xl bg-cyan-400 px-5 py-2 text-center text-[15px] font-medium text-ink-900">
                 หมวดหมู่
-              </span>
+              </span> */}
             </div>
           </div>
 
@@ -55,7 +60,7 @@ export default async function PlateDetailPage({
               </div>
             </div>
             <div className="text-right font-display text-4xl font-bold">
-              ฿ 60,000.-
+            {plate.price > 0 ? `฿ ${plate.price.toLocaleString('en-US')}.-` : 'สอบถามราคา'}
             </div>
           </div>
         </section>
@@ -65,7 +70,7 @@ export default async function PlateDetailPage({
           <div className="mx-auto flex aspect-square w-full max-w-[260px] items-center justify-center rounded-xl bg-slate-200 text-slate-500">
             {plate!.line_qr_url ? (
               <Image
-                src={plate!.line_qr_url}
+                src={lineQr}
                 alt="LINE QR"
                 width={260}
                 height={260}

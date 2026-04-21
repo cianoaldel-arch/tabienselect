@@ -4,6 +4,16 @@ import PlateCard from '@/components/PlateCard';
 import type { PromoBanner } from '@/lib/types';
 import Image from 'next/image';
 
+const DEFAULT_SITE_IMAGES = {
+  heroCar: '/porcheslanding.png',
+  plateBg: '/plate-bg.png',
+};
+
+const DEFAULT_PLATE_SHOWCASE = {
+  code: '7บข 28',
+  region: 'กรุงเทพมหานคร',
+};
+
 export default async function LandingPage() {
   const [plateData, bannerData, config] = await Promise.all([
     api.listPlates({ page: 1, limit: 8 }).catch(() => ({ items: [], total: 0 })),
@@ -11,12 +21,19 @@ export default async function LandingPage() {
     api.listConfig().catch(() => ({} as Record<string, string>)),
   ]);
 
-    const ImageSite = '/porcheslanding.png';
-
+  const heroCarImageUrl = config.hero_car_image_url || DEFAULT_SITE_IMAGES.heroCar;
+  const plateBgUrl = config.plate_bg_url || DEFAULT_SITE_IMAGES.plateBg;
+  const plateCode = config.plate_showcase_code || DEFAULT_PLATE_SHOWCASE.code;
+  const plateRegion = config.plate_showcase_region || DEFAULT_PLATE_SHOWCASE.region;
 
   return (
     <div className="container-page py-8">
-      <Hero heroCarImageUrl={ImageSite || null} />
+      <Hero
+        heroCarImageUrl={heroCarImageUrl || null}
+        plateBgUrl={plateBgUrl}
+        plateCode={plateCode}
+        plateRegion={plateRegion}
+      />
       <Tagline />
       <FeatureBar />
       <PromoBanners banners={bannerData.items} />
@@ -86,7 +103,17 @@ function FeaturedPlates({ plates }: { plates: Awaited<ReturnType<typeof api.list
   );
 }
 
-function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
+function Hero({
+  heroCarImageUrl,
+  plateBgUrl,
+  plateCode,
+  plateRegion,
+}: {
+  heroCarImageUrl: string | null;
+  plateBgUrl: string;
+  plateCode: string;
+  plateRegion: string;
+}) {
   return (
     <section className="relative overflow-hidden rounded-[28px] bg-ink-900 text-white">
       <div className="absolute inset-0 hero-waves" />
@@ -164,7 +191,11 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
         </div>
 
         <div className="relative flex items-center justify-center">
-          <PlateShowcase />
+          <PlateShowcase
+            backgroundUrl={plateBgUrl}
+            code={plateCode}
+            region={plateRegion}
+          />
           {heroCarImageUrl ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -181,18 +212,26 @@ function Hero({ heroCarImageUrl }: { heroCarImageUrl: string | null }) {
   );
 }
 
-function PlateShowcase() {
+function PlateShowcase({
+  backgroundUrl,
+  code,
+  region,
+}: {
+  backgroundUrl: string;
+  code: string;
+  region: string;
+}) {
   return (
     <div
       className="animate-pop-in animate-delay-300 absolute right-4 top-0 z-10 overflow-hidden rounded-2xl bg-white bg-cover bg-center px-6 py-3 shadow-2xl ring-2 ring-ink-900 sm:right-16"
-      style={{ backgroundImage: "url('/plate-bg.png')" }}
+      style={{ backgroundImage: `url('${backgroundUrl}')` , width: '60%', textAlign: 'center' }}
     >
       <div className="relative">
         <div className="relative font-display text-5xl font-bold tracking-wider text-ink-900 sm:text-6xl">
-          7บข <span className="ml-2">28</span>
+          {code}
         </div>
         <div className="relative mt-1 text-center text-sm font-medium text-ink-900">
-          กรุงเทพมหานคร
+          {region}
         </div>
       </div>
     </div>
@@ -327,10 +366,9 @@ function FeatureBar() {
 }
 
 function Contact() {
-  const lineUrl = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://line.me/';
+  const lineUrl = process.env.NEXT_PUBLIC_LINE_URL ?? 'https://lin.ee/WFUSWAW';
   const lineQr =
-    process.env.NEXT_PUBLIC_LINE_QR_URL ??
-    'https://placehold.co/280x280/png?text=LINE+QR';
+    '/line-qr-not.png';
 
   return (
     <section
@@ -373,6 +411,7 @@ function Contact() {
           <div className="relative">
             <div className="absolute inset-0 -m-2 rounded-3xl bg-gradient-to-br from-gold-300 to-brand-accent opacity-50 blur-xl" />
             <div className="relative rounded-2xl border border-white/20 bg-white p-5 text-center shadow-2xl">
+              
               <Image
                 src={lineQr}
                 alt="Line QR code"

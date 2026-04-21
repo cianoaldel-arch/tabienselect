@@ -9,6 +9,13 @@ type ImageSetting = {
   help?: string;
 };
 
+type TextSetting = {
+  key: string;
+  label: string;
+  help?: string;
+  placeholder?: string;
+};
+
 const IMAGE_SETTINGS: ImageSetting[] = [
   {
     key: 'hero_car_image_url',
@@ -19,6 +26,26 @@ const IMAGE_SETTINGS: ImageSetting[] = [
     key: 'logo_url',
     label: 'Site logo',
     help: 'Shown in the header. Falls back to /logo-ts.png.',
+  },
+  {
+    key: 'plate_bg_url',
+    label: 'Plate showcase background',
+    help: 'Background for the hero plate preview. Falls back to /plate-bg.png.',
+  },
+];
+
+const TEXT_SETTINGS: TextSetting[] = [
+  {
+    key: 'plate_showcase_code',
+    label: 'Plate showcase code',
+    help: 'Plate number shown on the hero preview.',
+    placeholder: '7บข 28',
+  },
+  {
+    key: 'plate_showcase_region',
+    label: 'Plate showcase region',
+    help: 'Region label shown under the plate number.',
+    placeholder: 'กรุงเทพมหานคร',
   },
 ];
 
@@ -49,6 +76,7 @@ export default function AdminSitePage() {
       const data = await api.listConfig();
       const next: Record<string, string> = {};
       for (const { key } of IMAGE_SETTINGS) next[key] = data[key] ?? '';
+      for (const { key } of TEXT_SETTINGS) next[key] = data[key] ?? '';
       setValues(next);
       setDrafts(next);
     } catch (e) {
@@ -107,6 +135,67 @@ export default function AdminSitePage() {
           />
         ))}
       </div>
+
+      <h2 className="font-display mt-10 mb-4 text-2xl font-bold text-brand">
+        Plate showcase text
+      </h2>
+      <div className="space-y-4">
+        {TEXT_SETTINGS.map((s) => (
+          <TextSettingEditor
+            key={s.key}
+            setting={s}
+            value={drafts[s.key] ?? ''}
+            dirty={(drafts[s.key] ?? '') !== (values[s.key] ?? '')}
+            onChange={(v) => setDrafts((d) => ({ ...d, [s.key]: v }))}
+            onSave={() => save(s.key)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TextSettingEditor({
+  setting,
+  value,
+  dirty,
+  onChange,
+  onSave,
+}: {
+  setting: TextSetting;
+  value: string;
+  dirty: boolean;
+  onChange: (v: string) => void;
+  onSave: () => void | Promise<void>;
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft">
+      <div className="mb-3 flex items-center justify-between">
+        <div>
+          <div className="font-display text-sm font-semibold text-slate-700">
+            {setting.label}
+          </div>
+          {setting.help && (
+            <div className="text-xs text-slate-500">{setting.help}</div>
+          )}
+          <div className="mt-0.5 font-mono text-[10px] text-slate-400">
+            {setting.key}
+          </div>
+        </div>
+        <button
+          onClick={onSave}
+          disabled={!dirty}
+          className="rounded-md border border-brand-accent/40 bg-gold-50 px-3 py-1 text-xs font-semibold text-brand-accent hover:bg-gold-100 disabled:opacity-40"
+        >
+          Save
+        </button>
+      </div>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={setting.placeholder}
+        className="w-full rounded-md border border-slate-200 px-3 py-1.5 text-sm"
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ export type Plate = {
   category: string;
   plate_type: string;
   numerology_sum: number;
+  price: number;
   line_qr_url: string;
   contact_text: string;
   created_at: string;

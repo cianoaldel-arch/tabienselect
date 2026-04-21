@@ -7,6 +7,7 @@ const plateBase = {
   category: z.string().min(1).max(64),
   plate_type: z.string().min(1).max(64),
   numerology_sum: z.number().int().min(0).max(999),
+  price: z.number().int().min(0).default(0),
   line_qr_url: z.string().url(),
   contact_text: z.string().min(1).max(500),
 };

@@ -11,6 +11,7 @@ export type PlateFormValues = {
   category: string;
   plate_type: string;
   numerology_sum: number;
+  price: number;
   line_qr_url: string;
   contact_text: string;
 };
@@ -22,6 +23,7 @@ type FormState = {
   category: string;
   plate_type: string;
   numerology_sum: string;
+  price: string;
   line_qr_url: string;
   contact_text: string;
 };
@@ -33,6 +35,7 @@ const blankState: FormState = {
   category: PLATE_CATEGORIES[0].value,
   plate_type: 'Sedan',
   numerology_sum: '',
+  price: '',
   line_qr_url: '',
   contact_text: '',
 };
@@ -45,6 +48,7 @@ function fromPlate(plate: Plate): FormState {
     category: plate.category,
     plate_type: plate.plate_type,
     numerology_sum: String(plate.numerology_sum),
+    price: String(plate.price ?? 0),
     line_qr_url: plate.line_qr_url,
     contact_text: plate.contact_text,
   };
@@ -90,6 +94,12 @@ export default function PlateForm({
     } else if (!Number.isInteger(sum) || sum < 0 || sum > 999) {
       next.numerology_sum = 'Integer between 0 and 999';
     }
+    const price = Number(form.price);
+    if (form.price === '' || Number.isNaN(price)) {
+      next.price = 'Must be a number';
+    } else if (!Number.isInteger(price) || price < 0) {
+      next.price = 'Integer ≥ 0';
+    }
     try {
       new URL(form.line_qr_url);
     } catch {
@@ -114,6 +124,7 @@ export default function PlateForm({
         category: form.category.trim(),
         plate_type: form.plate_type.trim(),
         numerology_sum: Number(form.numerology_sum),
+        price: Number(form.price),
         line_qr_url: form.line_qr_url.trim(),
         contact_text: form.contact_text.trim(),
       });
@@ -215,6 +226,18 @@ export default function PlateForm({
           />
         </Field>
       </div>
+
+      <Field label="Price (THB)" error={errors.price}>
+        <input
+          type="number"
+          min={0}
+          step={1}
+          value={form.price}
+          onChange={(e) => update('price', e.target.value)}
+          className={inputCls}
+          placeholder="e.g. 60000"
+        />
+      </Field>
 
       <Field label="Line QR URL" error={errors.line_qr_url}>
         <input
