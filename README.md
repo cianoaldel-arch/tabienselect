@@ -41,6 +41,11 @@ tabienselect/
 
 ## Setup
 
+## Setup Production
+
+npx prisma generate  
+npx prisma migrate deploy
+
 ### 1. PostgreSQL
 
 Create a database, e.g. `tabienselect`.
@@ -55,6 +60,7 @@ cd backend
 cp .env.example .env        # edit DATABASE_URL, JWT_SECRET, ADMIN_PASSWORD
 npm install
 npx prisma migrate dev --name init
+
 npm run seed                 # optional: create admin + sample plates
 npm run dev                  # http://localhost:4000
 ```
