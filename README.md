@@ -42,9 +42,10 @@ tabienselect/
 ## Setup
 
 ## Setup Production
-
-npx prisma generate  
-npx prisma migrate deploy
+# docker compose up -d --build
+<!-- ### docker compose -f docker-compose.db.yml up -d ไม่ต้อง deploy ใหม่ -->
+# npx prisma generate  
+# npx prisma migrate deploy
 
 ### 1. PostgreSQL
 
