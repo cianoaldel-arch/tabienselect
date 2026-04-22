@@ -36,7 +36,7 @@ RUN apk add --no-cache wget \
  && adduser  -u 1001 -S nextjs -G nodejs
 
 # Standalone output ships only the files actually needed at runtime
-# COPY --from=builder --chown=nextjs:nodejs /app/public           ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public           ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static     ./.next/static
 

@@ -44,6 +44,7 @@ tabienselect/
 ## Setup Production
 # docker compose up -d --build
 <!-- ### docker compose -f docker-compose.db.yml up -d ไม่ต้อง deploy ใหม่ -->
+# docker exec -it tabienselect-postgres-1 psql -U postgres -d tabienselect -c "ALTER USER postgres WITH PASSWORD 'root';"
 # npx prisma generate  
 # npx prisma migrate deploy
 
