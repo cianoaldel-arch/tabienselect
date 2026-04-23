@@ -15,7 +15,7 @@ services:
       PORT: 4000
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
     # Apply migrations on startup, then launch the API
-    command: sh -c "node_modules/.bin/prisma migrate deploy && node src/server.js"
+    command: sh -c "npx prisma migrate deploy && node src/server.js"
     ports:
       - "${BACKEND_PORT:-4000}:4000"
     healthcheck:
