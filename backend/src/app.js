@@ -9,7 +9,7 @@ const errorHandler = require('./middlewares/errorHandler');
 
 function createApp() {
   const app = express();
-  // app.use(cors());
+  app.use(cors());
 
   app.use(helmet());
   app.use(cors({ origin: env.corsOrigin.split(',').map((s) => s.trim()) }));
