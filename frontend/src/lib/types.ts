@@ -59,3 +59,11 @@ export type PromoBannerInput = Omit<
   PromoBanner,
   'id' | 'created_at' | 'updated_at'
 >;
+
+export type ImportPlatesResult = {
+  total: number;
+  inserted: number;
+  updated: number;
+  failed: number;
+  errors: { row: number; message: string }[];
+};

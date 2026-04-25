@@ -4,6 +4,7 @@ const authRoutes = require('./authRoutes');
 const themeRoutes = require('./themeRoutes');
 const configRoutes = require('./configRoutes');
 const promoBannerRoutes = require('./promoBannerRoutes');
+const importRoutes = require('./importRoutes');
 
 const router = Router();
 
@@ -13,5 +14,6 @@ router.use('/auth', authRoutes);
 router.use('/themes', themeRoutes);
 router.use('/config', configRoutes);
 router.use('/promo-banners', promoBannerRoutes);
+router.use('/imports', importRoutes);
 
 module.exports = router;

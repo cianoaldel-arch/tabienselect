@@ -87,9 +87,14 @@ export default function AdminPlatesListPage() {
             {total} plate{total === 1 ? '' : 's'} in the catalog.
           </p>
         </div>
-        <Link href="/admin/plates/new" className="btn-accent">
-          + Add plate
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/admin/plates/import" className="btn-ghost">
+            ↥ Import Excel
+          </Link>
+          <Link href="/admin/plates/new" className="btn-accent">
+            + Add plate
+          </Link>
+        </div>
       </div>
 
       {!token && (

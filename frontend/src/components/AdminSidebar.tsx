@@ -14,6 +14,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { href: '/admin/plates', icon: '≡', label: 'Manage plates', exact: true },
   { href: '/admin/plates/new', icon: '+', label: 'Add plate' },
+  { href: '/admin/plates/import', icon: '↥', label: 'Import Excel' },
   { href: '/admin/themes', icon: '◐', label: 'Themes' },
   { href: '/admin/promo', icon: '◆', label: 'Promo banners' },
   { href: '/admin/site', icon: '▤', label: 'Site images' },

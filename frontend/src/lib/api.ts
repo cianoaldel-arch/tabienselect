@@ -6,6 +6,7 @@ import type {
   ConfigMap,
   PromoBanner,
   PromoBannerInput,
+  ImportPlatesResult,
 } from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
@@ -66,6 +67,27 @@ export const api = {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     }),
+  importPlates: async (
+    token: string,
+    file: File,
+    defaults?: { line_qr_url?: string; contact_text?: string },
+  ) => {
+    const form = new FormData();
+    form.append('file', file);
+    if (defaults?.line_qr_url) form.append('line_qr_url', defaults.line_qr_url);
+    if (defaults?.contact_text) form.append('contact_text', defaults.contact_text);
+    const res = await fetch(buildUrl('/imports/plates'), {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`${res.status} ${res.statusText}: ${body}`);
+    }
+    return (await res.json()) as ImportPlatesResult;
+  },
 
   listThemes: () => request<{ items: Theme[] }>('/themes'),
   getActiveTheme: () => request<Theme | null>('/themes/active'),
