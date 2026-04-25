@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
-import type { Plate } from '@/lib/types';
-import { PLATE_CATEGORIES } from '@/lib/categories';
+import type { Plate, PlateCategory } from '@/lib/types';
 
 const LIMIT = 20;
 
@@ -16,13 +15,22 @@ export default function AdminPlatesListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState<PlateCategory[]>([]);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [flash, setFlash] = useState<string | null>(null);
 
   useEffect(() => {
     setToken(localStorage.getItem('admin_token'));
+  }, []);
+
+  useEffect(() => {
+    api
+      .listPlateCategories()
+      .then((res) => setCategories(res.items))
+      .catch(() => setCategories([]));
   }, []);
 
   const load = useCallback(async () => {
@@ -33,6 +41,7 @@ export default function AdminPlatesListPage() {
         page,
         limit: LIMIT,
         category: category || undefined,
+        q: search || undefined,
       });
       setPlates(data.items);
       setTotal(data.total);
@@ -41,7 +50,7 @@ export default function AdminPlatesListPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, category]);
+  }, [page, category, search]);
 
   useEffect(() => {
     load();
@@ -67,13 +76,14 @@ export default function AdminPlatesListPage() {
     }
   }
 
-  const filtered = search
-    ? plates.filter((p) =>
-        p.full_plate.toLowerCase().includes(search.toLowerCase()),
-      )
-    : plates;
-
+  const filtered = plates;
   const totalPages = Math.max(1, Math.ceil(total / LIMIT));
+
+  function applySearch(e: React.FormEvent) {
+    e.preventDefault();
+    setSearch(searchInput.trim());
+    setPage(1);
+  }
 
   return (
     <div>
@@ -119,14 +129,17 @@ export default function AdminPlatesListPage() {
         </div>
       )}
 
-      <div className="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-soft">
+      <form
+        onSubmit={applySearch}
+        className="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-soft"
+      >
         <label className="flex flex-col text-xs text-slate-600">
           Search
           <input
             type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Filter on this page…"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="prefix / number / full plate…"
             className="mt-1 w-56 rounded-md border border-slate-200 px-3 py-1.5 text-sm focus:border-brand-accent focus:outline-none"
           />
         </label>
@@ -138,25 +151,38 @@ export default function AdminPlatesListPage() {
               setCategory(e.target.value);
               setPage(1);
             }}
-            className="mt-1 w-40 rounded-md border border-slate-200 px-3 py-1.5 text-sm focus:border-brand-accent focus:outline-none"
+            className="mt-1 w-56 rounded-md border border-slate-200 px-3 py-1.5 text-sm focus:border-brand-accent focus:outline-none"
           >
-            <option value="">All</option>
-            {PLATE_CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
+            <option value="">All categories</option>
+            {categories.map((c) => (
+              <option key={c.category} value={c.category}>
+                {c.category} ({c.count})
               </option>
             ))}
           </select>
         </label>
         <button
-          type="button"
-          onClick={load}
-          className="btn-ghost text-xs"
+          type="submit"
+          className="btn-accent text-xs"
           disabled={loading}
         >
-          {loading ? 'Loading…' : 'Refresh'}
+          {loading ? 'Loading…' : 'Apply'}
         </button>
-      </div>
+        {(search || category) && (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchInput('');
+              setSearch('');
+              setCategory('');
+              setPage(1);
+            }}
+            className="btn-ghost text-xs"
+          >
+            Clear
+          </button>
+        )}
+      </form>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft">
         <table className="min-w-full divide-y divide-slate-200 text-sm">

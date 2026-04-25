@@ -3,9 +3,13 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
-import { PLATE_CATEGORIES } from '@/lib/categories';
+import type { PlateCategory } from '@/lib/types';
 
-export default function Filters() {
+export default function Filters({
+  categories = [],
+}: {
+  categories?: PlateCategory[];
+}) {
   const router = useRouter();
   const params = useSearchParams();
   const [, startTransition] = useTransition();
@@ -89,12 +93,12 @@ export default function Filters() {
           label="ทั้งหมด"
           onClick={() => navigate({ category: '' })}
         />
-        {PLATE_CATEGORIES.map((c) => (
+        {categories.map((c) => (
           <CategoryPill
-            key={c.value}
-            active={category === c.value}
-            label={c.label}
-            onClick={() => navigate({ category: c.value })}
+            key={c.category}
+            active={category === c.category}
+            label={`${c.category} (${c.count})`}
+            onClick={() => navigate({ category: c.category })}
           />
         ))}
       </div>

@@ -67,3 +67,8 @@ export type ImportPlatesResult = {
   failed: number;
   errors: { row: number; message: string }[];
 };
+
+export type PlateCategory = {
+  category: string;
+  count: number;
+};

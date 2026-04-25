@@ -18,13 +18,16 @@ export default async function PlatesPage({
   searchParams: SearchParams;
 }) {
   const page = Math.max(1, Number(searchParams.page ?? 1) || 1);
-  const data = await api.listPlates({
-    category: searchParams.category,
-    plate_type: searchParams.plate_type,
-    q: searchParams.q,
-    page,
-    limit: LIMIT,
-  });
+  const [data, categoriesRes] = await Promise.all([
+    api.listPlates({
+      category: searchParams.category,
+      plate_type: searchParams.plate_type,
+      q: searchParams.q,
+      page,
+      limit: LIMIT,
+    }),
+    api.listPlateCategories().catch(() => ({ items: [] })),
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(data.total / LIMIT));
 
@@ -34,7 +37,7 @@ export default async function PlatesPage({
         ทะเบียนทั้งหมด
       </h1>
 
-      <Filters />
+      <Filters categories={categoriesRes.items} />
 
       <div className="mt-8">
         {data.items.length === 0 ? (

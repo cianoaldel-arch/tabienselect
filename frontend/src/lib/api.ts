@@ -7,6 +7,7 @@ import type {
   PromoBanner,
   PromoBannerInput,
   ImportPlatesResult,
+  PlateCategory,
 } from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
@@ -44,6 +45,8 @@ async function request<T>(path: string, init?: RequestInit & { query?: Query }):
 export const api = {
   listPlates: (query: Query = {}) =>
     request<PlateListResponse>('/plates', { query }),
+  listPlateCategories: () =>
+    request<{ items: PlateCategory[] }>('/plates/categories'),
   getPlate: (id: string) => request<Plate>(`/plates/${id}`),
   login: (email: string, password: string) =>
     request<{ token: string }>('/auth/login', {

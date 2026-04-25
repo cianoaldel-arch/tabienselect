@@ -46,4 +46,17 @@ async function remove(id) {
   await prisma.plate.delete({ where: { id } });
 }
 
-module.exports = { list, getById, create, update, remove };
+async function listCategories() {
+  const grouped = await prisma.plate.groupBy({
+    by: ['category'],
+    _count: { _all: true },
+    orderBy: { category: 'asc' },
+  });
+  return {
+    items: grouped
+      .filter((g) => g.category && g.category.trim() !== '')
+      .map((g) => ({ category: g.category, count: g._count._all })),
+  };
+}
+
+module.exports = { list, getById, create, update, remove, listCategories };

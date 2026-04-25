@@ -6,6 +6,11 @@ exports.list = asyncHandler(async (req, res) => {
   res.json(data);
 });
 
+exports.listCategories = asyncHandler(async (_req, res) => {
+  const data = await plateService.listCategories();
+  res.json(data);
+});
+
 exports.get = asyncHandler(async (req, res) => {
   const plate = await plateService.getById(req.params.id);
   res.json(plate);
