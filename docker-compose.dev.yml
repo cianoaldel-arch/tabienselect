@@ -1,0 +1,16 @@
+# Local-development overrides — layer on top of docker-compose.yml.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# Adds:
+#   - Host port mapping for postgres so pgAdmin / Prisma Studio / DBeaver
+#     on the host machine can connect to the DB at localhost:5432.
+#
+# Do NOT use this file on production — it would expose the database
+# to the public internet on a DigitalOcean droplet.
+
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"

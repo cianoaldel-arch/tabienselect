@@ -1,0 +1,28 @@
+# ==========================================================
+# Environment files — never commit secrets to git.
+# Each environment (local dev, staging, production) maintains
+# its own .env file directly on the host. Only the template
+# (.env.example) is tracked.
+# ==========================================================
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+.next/
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
