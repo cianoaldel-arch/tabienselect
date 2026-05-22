@@ -143,9 +143,9 @@ function Hero({
       <div className="relative grid items-center gap-10 px-10 py-16 lg:grid-cols-[1.1fr_1fr] lg:px-16 lg:py-20">
         <div>
           <h1 className="animate-fade-up font-display text-5xl font-bold leading-[1.1] sm:text-6xl">
-            รับจอง<span className="text-cyan-400">ทะเบียน</span>
+            TABIEN<span className="text-cyan-400">SELECT</span>
             <br />
-            <span className="text-white/95">รถยนต์หมวดใหม่</span>
+            <span className="text-white/95">ทะเบียนสวย คัดพิเศษ</span>
           </h1>
           <div className="animate-fade-up animate-delay-200 mt-5 flex flex-wrap items-center gap-3 text-lg text-cyan-400">
             <span>เลขมงคล</span>
